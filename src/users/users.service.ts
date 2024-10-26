@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-
+import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class UsersService {
+  constructor(private db: PrismaService) {}
   // Returns all projects from the Projects Table
   async findAll(limit: Number) {
-    return `${limit} Users returned`;
+    return this.db.user.findMany();
   }
 
   //   Finds and returns one identified project

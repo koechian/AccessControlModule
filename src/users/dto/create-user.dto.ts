@@ -13,19 +13,21 @@ enum Role {
 
 export class CreateUserDto {
   @IsNotEmpty()
-  FirstName: String;
-  LastName: String;
+  firstname: string;
+  lastname: String;
 
   @IsEmail()
-  Email: String;
+  email: String;
 
   @IsNotEmpty()
   @IsPhoneNumber('KE')
-  PhoneNumber: Number;
+  phonenumber: Number;
 
-  Role: Role;
+  password: String;
+
+  role: Role;
 
   @IsNotEmpty()
   @IsAlphanumeric()
-  KRAPin: String;
+  kraPin: String;
 }

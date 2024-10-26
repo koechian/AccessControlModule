@@ -21,11 +21,13 @@ model User{
   lastName String
   email String @unique
   phonenumber String @unique
+  password String
   role String @default("Engineer")
   KRAPin String @unique 
   createdAt DateTime @default(now())  // Admin,Engineer,Project Manager
   lastLogin DateTime?
   updatedAt DateTime @updatedAt
+  projects ProjectUserLink[]
 }
 
 
@@ -36,24 +38,24 @@ model Project {
   description String
   clientName String
   isAssigned Boolean
+  asignee String?
   status String @default("ongoing")
-  asignee String
   startDate DateTime
   endDate DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  users ProjectUserLink[]
 }
 
-// model ProjectUserLink {
+model ProjectUserLink{
+  id Int @default(autoincrement()) @id
+  userID Int
+  projectID Int
+  assignedAt DateTime @default(now())
 
-//   id Int @id @default(autoincrement())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
+  user User @relation(fields: [userID], references: [id])
+  project Project @relation(fields: [projectID],references: [id])
 
-//   role String
-  
-//   project Project @relation(fields: [id], references: [projectId])
+  @@unique([userID,projectID])
+}
 
-//   assignedAt DateTime @updatedAt
-//   assignedBy String
-// }
