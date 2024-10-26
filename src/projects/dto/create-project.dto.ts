@@ -2,7 +2,6 @@ import {
   IsBoolean,
   IsDate,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsUUID,
   Validate,
@@ -36,14 +35,17 @@ enum Status {
 
 export class CreateProjectDto {
   @IsNotEmpty()
-  ProjectName: String;
+  projectName: string;
+
+  @IsNotEmpty()
+  description: string;
+
+  @IsNotEmpty()
+  clientName: string;
 
   @IsOptional()
   @IsBoolean()
-  isAssigned?: Boolean;
-
-  @IsNotEmpty()
-  clientName: String;
+  isAssigned: boolean;
 
   @IsDate()
   startDate: Date;
@@ -52,14 +54,9 @@ export class CreateProjectDto {
   @IsDate()
   endDate: Date;
 
-  @IsOptional()
-  status: Status;
+  status: string;
 
   @IsUUID()
   @Validate(IsAssignedRequiredConstraint)
-  Assignee: UUID;
-
-  @IsNumber()
-  @IsNotEmpty()
-  ProjectedDuration: Number;
+  assignee?: UUID;
 }
