@@ -13,7 +13,7 @@ export async function createEngineer() {
   const email = faker.internet.email();
   const phoneNumber = faker.phone.number({ style: 'national' });
   const KRAPin = faker.string.alphanumeric({ length: 10 });
-  const password = await argon.hash('password');
+  const password = await argon.hash('password', { type: argon.argon2id });
 
   return prisma.user.create({
     data: {
@@ -30,8 +30,8 @@ export async function createEngineer() {
 }
 
 export async function createAdmin() {
-  const firstName: string = faker.name.firstName();
-  const lastName = faker.name.lastName();
+  const firstName: string = faker.person.firstName();
+  const lastName = faker.person.lastName();
   const username = faker.internet.displayName({ firstName, lastName });
   const email = faker.internet.email();
   const phoneNumber = faker.phone.number({ style: 'national' });

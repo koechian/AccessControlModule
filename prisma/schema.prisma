@@ -19,7 +19,7 @@ model User{
   userid String @unique @default(uuid())
   firstName String
   lastName String
-  username String
+  username String @unique
   email String @unique
   phonenumber String @unique
   password String
