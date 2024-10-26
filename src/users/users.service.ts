@@ -10,8 +10,12 @@ export class UsersService {
   }
 
   //   Finds and returns one identified project
-  async findOne(id: Number) {
-    return `Found user ${id}`;
+  async findOne(username: string) {
+    return this.db.user.findMany({
+      where: {
+        username: username,
+      },
+    });
   }
 
   //   Creates a new project from the Data Object

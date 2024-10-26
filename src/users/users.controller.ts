@@ -12,14 +12,29 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UserGuard } from './guards/guards.guard';
+import { permission } from 'process';
+import { RolesGuard } from './guards/roles/roles.guard';
+import { Role } from './guards/roles/roles.decorator';
+
+type UserLogin = {
+  username: string;
+  password: string;
+};
 
 @Controller('users')
+@UseGuards(RolesGuard)
+@UseGuards(UserGuard)
 export class UsersController {
   constructor(private userService: UsersService) {}
+
+  @Role('Admin')
+  @Role('Project Manager')
   @Get('getAllUsers')
   findAll(
     @Query('limit', new DefaultValuePipe(100), ParseIntPipe) limit: Number,
@@ -27,9 +42,9 @@ export class UsersController {
     return this.userService.findAll(limit);
   }
 
-  @Get('getUser/:id')
-  getUser(@Param() id: Number) {
-    const user = this.userService.findOne(id['id']);
+  @Get('getUser')
+  getUser(@Body() loginDetails: UserLogin) {
+    const user = this.userService.findOne(loginDetails.username);
 
     if (!user) {
       throw new NotFoundException('No such user exists');
@@ -37,6 +52,8 @@ export class UsersController {
 
     return user;
   }
+
+  @Role('Admin')
   @Put('updateUser/:id')
   async updateUser(@Param() id: Number, @Body() body: any) {
     // Update the project from the Database
@@ -47,6 +64,7 @@ export class UsersController {
     }
   }
 
+  @Role('Admin')
   @Post('createUser')
   createUser(@Body(ValidationPipe) body: CreateUserDto) {
     // Create a project and add to the database
@@ -63,6 +81,7 @@ export class UsersController {
     return user;
   }
 
+  @Role('Admin')
   @Delete('deleteID/:id')
   deleteUser(@Param() id: Number) {
     // Create a project and add to the database
