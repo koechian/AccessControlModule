@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsDate,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -27,6 +28,12 @@ class IsAssignedRequiredConstraint implements ValidatorConstraintInterface {
   }
 }
 
+enum Status {
+  ongoing,
+  paused,
+  completed,
+}
+
 export class CreateProjectDto {
   @IsNotEmpty()
   ProjectName: String;
@@ -35,11 +42,24 @@ export class CreateProjectDto {
   @IsBoolean()
   isAssigned?: Boolean;
 
+  @IsNotEmpty()
+  clientName: String;
+
+  @IsDate()
+  startDate: Date;
+
   @IsOptional()
+  @IsDate()
+  endDate: Date;
+
+  @IsOptional()
+  status: Status;
+
   @IsUUID()
   @Validate(IsAssignedRequiredConstraint)
   Assignee: UUID;
 
   @IsNumber()
+  @IsNotEmpty()
   ProjectedDuration: Number;
 }

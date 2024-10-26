@@ -35,7 +35,7 @@ export class ProjectsController {
     return this.projectsService.updateProject(Number(id['id']));
   }
 
-  @Post('createProject/:id')
+  @Post('createProject')
   createProject(@Body(ValidationPipe) body: CreateProjectDto) {
     // Create a project and add to the database
 

@@ -5,6 +5,12 @@ import {
   IsPhoneNumber,
 } from 'class-validator';
 
+enum Role {
+  'Admin',
+  'Project Manager',
+  'Engineer',
+}
+
 export class CreateUserDto {
   @IsNotEmpty()
   FirstName: String;
@@ -16,6 +22,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsPhoneNumber('KE')
   PhoneNumber: Number;
+
+  Role: Role;
 
   @IsNotEmpty()
   @IsAlphanumeric()
