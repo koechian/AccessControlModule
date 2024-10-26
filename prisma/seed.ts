@@ -9,6 +9,7 @@ const roles = ['Admin', 'Engineer', 'Project Manager'];
 export async function createEngineer() {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
+  const username = faker.internet.displayName({ firstName, lastName });
   const email = faker.internet.email();
   const phoneNumber = faker.phone.number({ style: 'national' });
   const KRAPin = faker.string.alphanumeric({ length: 10 });
@@ -18,6 +19,7 @@ export async function createEngineer() {
     data: {
       firstName,
       lastName,
+      username,
       email,
       password,
       phonenumber: phoneNumber,
@@ -30,6 +32,7 @@ export async function createEngineer() {
 export async function createAdmin() {
   const firstName: string = faker.name.firstName();
   const lastName = faker.name.lastName();
+  const username = faker.internet.displayName({ firstName, lastName });
   const email = faker.internet.email();
   const phoneNumber = faker.phone.number({ style: 'national' });
   const KRAPin = faker.string.alphanumeric({ length: 10 });
@@ -39,6 +42,7 @@ export async function createAdmin() {
     data: {
       firstName,
       lastName,
+      username,
       email,
       phonenumber: phoneNumber,
       role: 'Admin',
