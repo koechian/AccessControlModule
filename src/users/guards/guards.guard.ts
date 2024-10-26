@@ -4,15 +4,11 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserGuard implements CanActivate {
-  constructor(
-    private jwtToken: JwtService,
-    private reflector: Reflector,
-  ) {}
+  constructor(private jwtToken: JwtService) {}
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
