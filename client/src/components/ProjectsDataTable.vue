@@ -16,6 +16,8 @@ import {
   PhPause,
   PhRepeat,
   PhPencilSimple,
+  PhTrash,
+  PhFilePlus,
 } from '@phosphor-icons/vue';
 import Button from './ui/button/Button.vue';
 import DatePicker from './DatePicker.vue';
@@ -28,7 +30,17 @@ import {
 import axios from 'axios';
 import { toast, Toaster } from 'vue-sonner';
 import SelectAsignee from '@/components/SelectAsignee.vue';
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 const props = defineProps({
   data: {
     type: Array,
@@ -62,6 +74,22 @@ function populateForm(row) {
     status: row.status,
     endDate: row.endDate,
   };
+}
+
+async function projectDelete(id) {
+  const response = await axios.delete(
+    `http://localhost:3000/projects/deleteProject/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${auth.accessToken}`,
+      },
+    },
+  );
+
+  if (response.statusText === 'OK') {
+    toast.success('Project Deleted', { position: 'top-left' });
+    emits('projectUpdated');
+  }
 }
 
 async function projectEditSubmit() {
@@ -98,8 +126,6 @@ async function projectEditSubmit() {
       toast.success('Project Updated Successfully', { position: 'top-left' });
       emits('projectUpdated');
     }
-
-    console.log(changedData);
 
     // Reset form after successful submission
     updateform.value = {
@@ -141,8 +167,14 @@ function formatDate(isoString) {
 </script>
 
 <template>
-  <div>
+  <div class="flex justify-between">
     <h4 class="mb-5 text-xl font-semibold">All Projects Outline</h4>
+    <Button class="bg-[#297045] hover:bg-[#2E933C]"
+      ><div class="flex gap-2">
+        <PhFilePlus :size="22" />
+        Create new Project
+      </div></Button
+    >
   </div>
 
   <Toaster></Toaster>
@@ -338,6 +370,32 @@ function formatDate(isoString) {
                   </div>
                   <Button>Apply Changes</Button>
                 </form>
+                <AlertDialog>
+                  <AlertDialogTrigger>
+                    <Button class="mt-20" variant="destructive">
+                      <div class="flex gap-2">
+                        <PhTrash :size="22" /> Delete Project
+                      </div>
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle
+                        >Are you absolutely sure?</AlertDialogTitle
+                      >
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently the
+                        project and unclouple it from the associated user.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction @click.prevent="projectDelete(row.id)"
+                        >Continue</AlertDialogAction
+                      >
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </SheetContent>
           </Sheet>

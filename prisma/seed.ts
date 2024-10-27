@@ -29,6 +29,29 @@ export async function createEngineer() {
   });
 }
 
+export async function createPM() {
+  const firstName = faker.name.firstName();
+  const lastName = faker.name.lastName();
+  const username = faker.internet.displayName({ firstName, lastName });
+  const email = faker.internet.email();
+  const phoneNumber = faker.phone.number({ style: 'national' });
+  const KRAPin = faker.string.alphanumeric({ length: 10 });
+  const password = await argon.hash('password', { type: argon.argon2id });
+
+  return prisma.user.create({
+    data: {
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      phonenumber: phoneNumber,
+      role: 'Project Manager',
+      KRAPin,
+    },
+  });
+}
+
 export async function createAdmin() {
   const firstName: string = faker.person.firstName();
   const lastName = faker.person.lastName();
@@ -94,7 +117,12 @@ async function main() {
   await Promise.all(engineers);
   console.log('10 Engineers created.');
 
-  // Create 5 Projects
+  // Create 10 Project  Managers
+  const projectmanagers = Array.from({ length: 10 }).map(() => createPM());
+  await Promise.all(projectmanagers);
+  console.log('10 Project Managers created.');
+
+  // Create 15 Projects
   const projects = Array.from({ length: 5 }).map(() => createFakeProject());
   await Promise.all(projects);
   console.log('5 Projects created.');

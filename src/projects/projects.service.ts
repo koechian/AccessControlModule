@@ -136,11 +136,21 @@ export class ProjectsService {
     return res;
   }
 
-  //   Deletes the defined project from the database
-  async deleteProject(id: string) {
+  // Deletes the defined project from the database, including any assignments
+  async deleteProject(projectId: number) {
+    // First, delete any entries in ProjectUserLink for this project
+    await this.db.projectUserLink.deleteMany({
+      where: {
+        project: {
+          id: Number(projectId),
+        },
+      },
+    });
+
+    // Then, delete the project itself
     return this.db.project.delete({
       where: {
-        projectId: id,
+        id: Number(projectId),
       },
     });
   }

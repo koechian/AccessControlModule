@@ -104,8 +104,16 @@ export class ProjectsController {
   // Only Admins
   @Role('Admin')
   @Delete('deleteProject/:id')
-  deleteProject(@Param() id: string) {
-    return this.projectsService.deleteProject(String(id['id']));
+  async deleteProject(@Response() res: any, @Param() id: number) {
+    try {
+      this.projectsService.deleteProject(id['id']);
+      return res.status(200).json({ message: 'Project Deleted' });
+    } catch (e) {
+      throw new HttpException(
+        'Error updating the project',
+        HttpStatus.BAD_GATEWAY,
+      );
+    }
   }
 
   // Only Admins and Project Managers
@@ -117,13 +125,13 @@ export class ProjectsController {
   }
 
   // Delete multiple projects at once
-  @Role('Admin ')
-  @Delete('deleteProjecs/:ids')
-  deleteProjects(@Body() ids: string[]) {
-    // delete a list of ids
+  // @Role('Admin ')
+  // @Delete('deleteProjecs/:ids')
+  // deleteProjects(@Body() ids: string[]) {
+  //   // delete a list of ids
 
-    return this.projectsService.deleteProjects(ids);
-  }
+  //   return this.projectsService.deleteProjects(ids);
+  // }
 
   // Delete multiple Projects at once if they are assigned to you
   // @Role('Admin ')
