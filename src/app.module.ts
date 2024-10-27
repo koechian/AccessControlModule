@@ -16,6 +16,6 @@ import { JwtMiddleware } from './token-blacklist/jwt.middleware';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes('/users/getAllUsers');
+    consumer.apply(JwtMiddleware).forRoutes('/users/*', '/projects/*');
   }
 }

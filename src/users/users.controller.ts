@@ -42,6 +42,7 @@ export class UsersController {
     return this.userService.findAll(limit);
   }
 
+  @Role('Admin')
   @Get('getUser')
   getUser(@Body() loginDetails: UserLogin) {
     const user = this.userService.findOne(loginDetails.username);
