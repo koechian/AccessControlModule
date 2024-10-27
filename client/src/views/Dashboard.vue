@@ -1,76 +1,63 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import NavBar from '@/components/NavBar.vue';
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import axios from 'axios';
+import UserDataTable from '@/components/UserDataTable.vue';
+import ProjectsDataTable from '@/components/ProjectsDataTable.vue';
 
 const auth = JSON.parse(sessionStorage.getItem('auth'));
 const username = ref(auth.username);
-let data = ref([]);
+let usersData = ref([]);
+let projectsData = ref([]);
+const selectedTable = ref('users');
 
 onMounted(() => {
-  dataFetcher();
+  dataFetcher('users');
 });
 
-async function dataFetcher() {
+function toggleDataFetched(type) {
+  selectedTable.value = type;
+  dataFetcher(type);
+}
+
+async function dataFetcher(type) {
   // Send off a post request to the getUsers endpoint to get the data
 
+  const endpoint =
+    type === 'users'
+      ? 'http://localhost:3000/users/getAllUsers'
+      : 'http://localhost:3000/projects/getProjects';
   try {
-    const response = await axios.get(
-      'http://localhost:3000/users/getAllUsers',
-      {
-        headers: {
-          Authorization: `Bearer ${auth.accessToken}`,
-        },
+    const response = await axios.get(endpoint, {
+      headers: {
+        Authorization: `Bearer ${auth.accessToken}`,
       },
-    );
-    data.value = response.data;
+    });
+    if (type === 'users') {
+      usersData.value = response.data;
+    } else {
+      projectsData.value = response.data;
+    }
   } catch (e) {
     console.log(e);
   }
 }
+
+function handleProjectsUpdate() {
+  dataFetcher('projects');
+}
 </script>
 
 <template>
-  <NavBar />
+  <NavBar @toggleTable="toggleDataFetched" />
 
   <section class="bg-[#F5F5F5] p-5 mt-5">
-    <div>
-      <h1 class="font-normal text-2xl mb-10">Hello, {{ username }}</h1>
-      <h4 class="mb-5 text-xl font-semibold">Employees</h4>
-    </div>
-
-    <Table>
-      <TableCaption>A list of your employees and their details.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead class="w-[100px]"> First Name </TableHead>
-          <TableHead class="w-[100px]"> Last Name </TableHead>
-          <TableHead class="w-[100px]"> Email</TableHead>
-          <TableHead class="w-[100px]"> Phonenumber</TableHead>
-          <TableHead class="w-[100px]"> Role</TableHead>
-          <TableHead class="w-[100px]"> KRA Pin</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow v-for="row in data" :id="row.id">
-          <TableCell>{{ row.firstName }}</TableCell>
-          <TableCell>{{ row.lastName }}</TableCell>
-          <TableCell>{{ row.email }}</TableCell>
-          <TableCell>{{ row.phonenumber }}</TableCell>
-          <TableCell>{{ row.role }}</TableCell>
-          <TableCell>{{ row.KRAPin }}</TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+    <h1 class="font-normal text-2xl mb-10">Hello, {{ username }}</h1>
+    <component
+      :is="selectedTable === 'users' ? UserDataTable : ProjectsDataTable"
+      :data="selectedTable === 'users' ? usersData : projectsData"
+      @project-updated="handleProjectsUpdate"
+    />
   </section>
 
   <router-view></router-view>
