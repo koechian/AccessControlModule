@@ -4,7 +4,6 @@ import DropdownMenuContent from './ui/dropdown-menu/DropdownMenuContent.vue';
 import DropdownMenuLabel from './ui/dropdown-menu/DropdownMenuLabel.vue';
 import DropdownMenuSeparator from './ui/dropdown-menu/DropdownMenuSeparator.vue';
 import DropdownMenuTrigger from './ui/dropdown-menu/DropdownMenuTrigger.vue';
-import { defineProps } from 'vue';
 import {
   PhSignOut,
   PhBlueprint,
@@ -45,9 +44,7 @@ async function handleLogout(event) {
 </script>
 
 <template>
-  <nav
-    class="w-full h-1/5 outline-dashed outline-1 p-3 px-10 flex justify-between"
-  >
+  <nav class="w-full h-1/5 p-3 px-10 flex justify-between">
     <div class="flex gap-3 items-center">
       <svg
         role="img"
@@ -67,25 +64,25 @@ async function handleLogout(event) {
         <DropdownMenuTrigger>
           <img
             :src="`https://ui-avatars.com/api/?name=${username}&rounded=true&background=2C333A&color=D7E8BA`"
-            alt=""
+            alt="User PFP"
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel class="hover:cursor-pointer">
-            <div class="flex gap-3">
+            <div class="flex gap-3 font-medium">
               <PhIdentificationCard :size="18" />
               My Profile
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuLabel class="hover:cursor-pointer">
-            <div class="flex gap-3">
+            <div class="flex gap-3 font-medium">
               <PhUsers :size="18" />
-              Users
+              Employees
             </div>
           </DropdownMenuLabel>
           <DropdownMenuLabel class="hover:cursor-pointer">
-            <div class="flex gap-3">
+            <div class="flex gap-3 font-medium">
               <PhBlueprint :size="18" />
               Projects
             </div>
@@ -93,7 +90,7 @@ async function handleLogout(event) {
           <DropdownMenuSeparator />
           <DropdownMenuLabel>
             <button
-              class="font-bold text-red-400 hover:text-red-800 hover:cursor-pointer"
+              class="font-medium text-red-400 hover:text-red-800 hover:cursor-pointer"
               @click="handleLogout"
             >
               <div class="flex gap-1">

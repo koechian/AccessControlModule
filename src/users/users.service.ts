@@ -6,7 +6,12 @@ export class UsersService {
   constructor(private db: PrismaService) {}
   // Returns all projects from the Projects Table
   async findAll(limit: Number) {
-    return this.db.user.findMany();
+    return this.db.user.findMany({
+      omit: { password: true },
+      orderBy: {
+        firstName: 'asc',
+      },
+    });
   }
 
   //   Finds and returns one identified project

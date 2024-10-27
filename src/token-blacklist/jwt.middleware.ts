@@ -7,6 +7,7 @@ export class JwtMiddleware implements NestMiddleware {
 
   async use(req: any, res: any, next: () => void) {
     const token = req.headers['authorization']?.split(' ')[1];
+
     if (await this.tokenBlacklistService.isTokenBlacklisted(token)) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
