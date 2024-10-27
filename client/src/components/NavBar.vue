@@ -76,13 +76,19 @@ async function handleLogout(event) {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuLabel class="hover:cursor-pointer">
-            <div class="flex gap-3 font-medium">
+            <div
+              @click="$emit('toggleTable', 'users')"
+              class="flex gap-3 font-medium"
+            >
               <PhUsers :size="18" />
               Employees
             </div>
           </DropdownMenuLabel>
           <DropdownMenuLabel class="hover:cursor-pointer">
-            <div class="flex gap-3 font-medium">
+            <div
+              @click="$emit('toggleTable', 'projects')"
+              class="flex gap-3 font-medium"
+            >
               <PhBlueprint :size="18" />
               Projects
             </div>
