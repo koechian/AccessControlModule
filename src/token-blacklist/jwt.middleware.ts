@@ -14,8 +14,3 @@ export class JwtMiddleware implements NestMiddleware {
     next();
   }
 }
-
-// {
-//   "username":"Burley_Carter23",
-//   "password":"password"
-// }

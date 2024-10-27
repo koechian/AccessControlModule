@@ -36,7 +36,6 @@ export class TokenBlacklistService {
     });
 
     if (result.length > 0) {
-      console.log('Returned True');
       return true;
     }
 

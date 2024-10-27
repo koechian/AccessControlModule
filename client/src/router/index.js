@@ -1,13 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import { Login } from '@/views/Login.vue';
+import Dashboard from '@/views/Dashboard.vue';
+import Login from '@/views/Login.vue';
+import { createMemoryHistory, createRouter } from 'vue-router';
 
 const routes = [
   { path: '/', name: 'Login', component: Login },
-  { path: '/about', name: 'About', component: About },
+  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createMemoryHistory(),
   routes,
 });
 
