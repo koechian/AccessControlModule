@@ -4,10 +4,11 @@ import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
+import { TokenBlacklistService } from 'src/token-blacklist/token-blacklist.service';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, UsersService, PrismaService],
+  providers: [AuthService, UsersService, PrismaService, TokenBlacklistService],
   imports: [
     JwtModule.register({
       global: true,

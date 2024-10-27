@@ -31,6 +31,13 @@ model User{
   projects ProjectUserLink[]
 }
 
+model BlacklistedTokens{
+
+id Int @id @default(autoincrement())
+token String @unique
+blackListedAt DateTime @default(now())
+}
+
 
 model Project {
   id Int @default(autoincrement()) @id

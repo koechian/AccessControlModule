@@ -9,6 +9,7 @@ type AuthResult = {
   accessToken: string;
   userid: string;
   username: string;
+  role: string;
 };
 
 @Injectable()
@@ -40,6 +41,7 @@ export class AuthService {
       accessToken: token,
       userid: user.userid,
       username: user.username,
+      role: user.role,
     };
   }
 
@@ -54,6 +56,4 @@ export class AuthService {
     }
     return null;
   }
-
-  async logout(input: { token: string }) {}
 }
