@@ -57,6 +57,7 @@ export async function createFakeProject() {
   const projectName = faker.commerce.productName();
   const description = faker.lorem.sentence();
   const clientName = faker.company.name();
+  const projectedCost = faker.number.int({ min: 120000, max: 10000000 });
   const startDate = faker.date.past();
   const endDate = faker.datatype.boolean() ? faker.date.future() : null;
   const status = faker.helpers.arrayElement(statuses);
@@ -66,6 +67,7 @@ export async function createFakeProject() {
       projectName,
       description,
       clientName,
+      projectedCost,
       isAssigned: false,
       status,
       startDate,

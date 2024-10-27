@@ -2,6 +2,7 @@ import {
   IsBoolean,
   IsDate,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsUUID,
   Validate,
@@ -39,6 +40,9 @@ export class CreateProjectDto {
 
   @IsNotEmpty()
   description: string;
+
+  @IsNumber()
+  projectedCost: number;
 
   @IsNotEmpty()
   clientName: string;

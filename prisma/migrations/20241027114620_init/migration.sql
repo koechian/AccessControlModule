@@ -16,12 +16,20 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "BlacklistedTokens" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "token" TEXT NOT NULL,
+    "blackListedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
 CREATE TABLE "Project" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "projectId" TEXT NOT NULL,
     "projectName" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "clientName" TEXT NOT NULL,
+    "projectedCost" INTEGER NOT NULL,
     "isAssigned" BOOLEAN NOT NULL,
     "asignee" TEXT,
     "status" TEXT NOT NULL DEFAULT 'ongoing',
@@ -55,6 +63,9 @@ CREATE UNIQUE INDEX "User_phonenumber_key" ON "User"("phonenumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_KRAPin_key" ON "User"("KRAPin");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "BlacklistedTokens_token_key" ON "BlacklistedTokens"("token");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Project_projectId_key" ON "Project"("projectId");

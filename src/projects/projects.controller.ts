@@ -3,12 +3,15 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Put,
   Query,
   UseGuards,
   ValidationPipe,
+  Response,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -17,10 +20,11 @@ import { RolesGuard } from 'src/users/guards/roles/roles.guard';
 import { UserGuard } from 'src/users/guards/guards.guard';
 
 type ProjectDefinition = {
+  projectId: string;
   projectName?: string;
   description?: string;
   clientName?: string;
-  isAssigned?: Boolean;
+  isAssigned?: boolean;
   asignee?: string;
   status?: string;
   startDate?: Date;
@@ -57,10 +61,18 @@ export class ProjectsController {
   // Edits any Project
   // open to:[Admin]
   @Role('Admin')
-  @Put('updateProject/:id')
-  updateProject(@Param() id: Number, @Body() body: ProjectDefinition) {
+  @Put('updateProject')
+  updateProject(@Response() res: any, @Body() body: ProjectDefinition) {
     // Add the details to be updated as an Object/Body
-    return this.projectsService.updateProject(Number(id['id']), body);
+    try {
+      this.projectsService.updateProject(body);
+      return res.status(200).json({ message: 'Project Updated' });
+    } catch (e) {
+      throw new HttpException(
+        'Error updating the project',
+        HttpStatus.BAD_GATEWAY,
+      );
+    }
   }
 
   // open to: [Admin, Project Manager]

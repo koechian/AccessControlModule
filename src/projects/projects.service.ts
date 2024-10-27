@@ -2,6 +2,18 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
+type ProjectDefinition = {
+  projectId: string;
+  projectName?: string;
+  description?: string;
+  clientName?: string;
+  isAssigned?: boolean;
+  asignee?: string;
+  status?: string;
+  startDate?: Date;
+  endDate?: Date;
+};
+
 @Injectable()
 export class ProjectsService {
   constructor(private db: PrismaService) {}
@@ -41,10 +53,18 @@ export class ProjectsService {
   }
 
   //   Updates the defined project
-  async updateProject(id: Number, body) {
+  async updateProject(body: ProjectDefinition) {
     // Add the details to be updated as an Object/Body
 
-    const res = await this.db.project.upsert(body);
+    console.log(body);
+
+    const res = await this.db.project.update({
+      where: {
+        projectId: body.projectId,
+      },
+
+      data: body,
+    });
 
     return res;
   }
