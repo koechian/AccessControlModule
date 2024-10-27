@@ -126,9 +126,9 @@ export class ProjectsController {
   }
 
   // Delete multiple Projects at once if they are assigned to you
-  @Role('Admin ')
-  @Delete('deleteProjecs/:ids')
-  deleteAssignedProjects(@Param() userid: string, @Body() ids: string[]) {
-    return this.projectsService.deleteAssignedProjects(userid, ids);
-  }
+  // @Role('Admin ')
+  // @Delete('deleteProjecs/:ids')
+  // deleteAssignedProjects(@Param() userid: string, @Body() ids: string[]) {
+  //   return this.projectsService.deleteAssignedProjects(userid, ids);
+  // }
 }

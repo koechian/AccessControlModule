@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/sheet';
 import axios from 'axios';
 import { toast, Toaster } from 'vue-sonner';
+import SelectAsignee from '@/components/SelectAsignee.vue';
 
 const props = defineProps({
   data: {
@@ -98,6 +99,8 @@ async function projectEditSubmit() {
       emits('projectUpdated');
     }
 
+    console.log(changedData);
+
     // Reset form after successful submission
     updateform.value = {
       projectName: '',
@@ -150,16 +153,16 @@ function formatDate(isoString) {
     >
     <TableHeader>
       <TableRow>
-        <TableHead> Project Name </TableHead>
-        <TableHead> Description</TableHead>
-        <TableHead> Client Name</TableHead>
-        <TableHead> Projected Cost</TableHead>
-        <TableHead> Assigned</TableHead>
-        <TableHead> Asignee</TableHead>
-        <TableHead> Status</TableHead>
-        <TableHead> Date Started</TableHead>
-        <TableHead> Projected End</TableHead>
-        <TableHead> Actions</TableHead>
+        <TableHead class="text-center"> Project Name </TableHead>
+        <TableHead class="text-center"> Description</TableHead>
+        <TableHead class="text-center"> Client Name</TableHead>
+        <TableHead class="text-center"> Projected Cost</TableHead>
+        <TableHead class="text-center"> Assigned</TableHead>
+        <TableHead class="text-center"> Asignee</TableHead>
+        <TableHead class="text-center"> Status</TableHead>
+        <TableHead class="text-center"> Date Started</TableHead>
+        <TableHead class="text-center"> Projected End</TableHead>
+        <TableHead class="text-center"> Actions</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -171,7 +174,7 @@ function formatDate(isoString) {
         <TableCell class="w-[150px]">
           <div class="justify-items-center">
             <component
-              :is="row.isAssigned ? PhCheckCirle : PhXCircle"
+              :is="row.isAssigned ? PhCheckCircle : PhXCircle"
               :size="25"
               :color="row.isAssigned ? '#04724D' : '#FE5F00'"
             ></component>
@@ -181,7 +184,15 @@ function formatDate(isoString) {
             <span class="text-[#FE5F00] text-xs" v-else>Not Assigned</span>
           </div></TableCell
         >
-        <TableCell>{{ row.asignee }}</TableCell>
+        <TableCell
+          ><div class="text-center">
+            {{
+              row.isAssigned && row.users[0]?.user
+                ? row.users[0].user.firstName + ' ' + row.users[0].user.lastName
+                : '-'
+            }}
+          </div>
+        </TableCell>
         <TableCell>
           <div class="justify-items-center text-center">
             <component
@@ -311,6 +322,14 @@ function formatDate(isoString) {
                       <option value="paused">Paused</option>
                       <option value="ongoing">Ongoing</option>
                     </select>
+                  </div>
+
+                  <div class="mt-3 flex flex-col gap-2">
+                    <label for="">Asignee</label>
+                    <SelectAsignee
+                      :isEnabled="updateform.isAssigned"
+                      v-model="updateform.asignee"
+                    />
                   </div>
 
                   <div class="mt-3 flex flex-col gap-2">

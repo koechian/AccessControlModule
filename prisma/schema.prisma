@@ -48,7 +48,6 @@ model Project {
   clientName String
   projectedCost Int
   isAssigned Boolean
-  asignee String?
   status String @default("ongoing")
   startDate DateTime
   endDate DateTime?
@@ -59,12 +58,12 @@ model Project {
 
 model ProjectUserLink{
   id Int @default(autoincrement()) @id
-  userID Int
-  projectID Int
+  userID String
+  projectID String
   assignedAt DateTime @default(now())
 
-  user User @relation(fields: [userID], references: [id])
-  project Project @relation(fields: [projectID],references: [id])
+  user User @relation(fields: [userID], references: [userid])
+  project Project @relation(fields: [projectID],references: [projectId])
 
   @@unique([userID,projectID])
 }

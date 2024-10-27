@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -18,27 +18,63 @@ type ProjectDefinition = {
 export class ProjectsService {
   constructor(private db: PrismaService) {}
 
-  // Returns all projects from the Projects Table
+  // Returns all projects with assigned user details if available
   async findAll() {
-    // Implement Alphabetical Sorting
-    return this.db.project.findMany();
+    return this.db.project.findMany({
+      include: {
+        users: {
+          select: {
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        projectName: 'asc',
+      },
+    });
   }
 
-  //   Finds and returns one identified project by id
-  async findOne(id: Number) {
+  // Finds and returns one identified project by id with assigned user details if available
+  async findOne(id: number) {
     return this.db.project.findUnique({
       where: {
         id: Number(id),
+      },
+      include: {
+        users: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                username: true,
+              },
+            },
+          },
+        },
       },
     });
   }
 
   // Finds all projects that have been assigned to a specific person
   async findAllAssigned(userid: string) {
+    // Look for all projects linked to the user in the ProjectUserLink table
     return this.db.project.findMany({
       where: {
-        isAssigned: true,
-        asignee: userid,
+        users: {
+          some: {
+            user: {
+              userid: userid,
+            },
+          },
+        },
       },
     });
   }
@@ -52,21 +88,38 @@ export class ProjectsService {
     return project;
   }
 
-  //   Updates the defined project
+  // Updates the defined project and optionally assigns it to a user
   async updateProject(body: ProjectDefinition) {
-    // Add the details to be updated as an Object/Body
+    const { projectId, asignee, ...projectData } = body; // Extract projectId and asignee from body
 
-    console.log(body);
-
-    const res = await this.db.project.update({
+    // Update the project with the rest of the provided fields
+    const projectUpdate = await this.db.project.update({
       where: {
-        projectId: body.projectId,
+        projectId: projectId,
       },
-
-      data: body,
+      data: projectData,
     });
 
-    return res;
+    // If a userid is provided, assign the user to the project using ProjectUserLink
+    if (asignee) {
+      await this.db.projectUserLink.upsert({
+        where: {
+          userID_projectID: {
+            userID: asignee,
+            projectID: projectUpdate.projectId,
+          },
+        },
+        create: {
+          userID: asignee,
+          projectID: projectUpdate.projectId,
+        },
+        update: {
+          assignedAt: new Date(), // Update the timestamp of assignment if reassigning
+        },
+      });
+    }
+
+    return projectUpdate;
   }
 
   //   Updates the defined project if the user is assigned to it
@@ -75,7 +128,6 @@ export class ProjectsService {
 
     const res = await this.db.project.update({
       where: {
-        asignee: userid,
         id: Number(id),
       },
       data: body,
@@ -93,14 +145,36 @@ export class ProjectsService {
     });
   }
 
-  //   Deletes the defined project from the database
-  async deleteAssignedProject(id: string, userid: string) {
-    return this.db.project.delete({
+  // Deletes the defined project if the user is assigned to it
+  async deleteAssignedProject(projectId: string, userId: string) {
+    // Check if the user is assigned to the project via ProjectUserLink
+    const isAssigned = await this.db.projectUserLink.findFirst({
       where: {
-        projectId: id,
-        asignee: userid,
+        project: {
+          projectId: projectId,
+        },
+        user: {
+          userid: userId,
+        },
       },
     });
+
+    // If the user is not assigned to the project, return an error or null
+    if (!isAssigned) {
+      throw new HttpException(
+        'User is not assigned to this project.',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    // Delete the project since the user is assigned
+    const deletedProject = await this.db.project.delete({
+      where: {
+        projectId: projectId,
+      },
+    });
+
+    return deletedProject;
   }
 
   // Deletes multiple projects from the database at a go
@@ -121,22 +195,22 @@ export class ProjectsService {
     });
   }
 
-  // Deletes multiple projects from the database at a go
-  async deleteAssignedProjects(userid: string, ids: string[]) {
-    // return `Projects with ids ${ids} have been deleted`;
+  // // Deletes multiple projects from the database at a go
+  // async deleteAssignedProjects(userid: string, ids: string[]) {
+  //   // return `Projects with ids ${ids} have been deleted`;
 
-    ids.forEach((id) => {
-      try {
-        this.db.project.delete({
-          where: {
-            id: Number(id),
-            asignee: userid,
-          },
-        });
-      } catch (e) {
-        console.log(e);
-        throw new HttpException('database error', 404);
-      }
-    });
-  }
+  //   ids.forEach((id) => {
+  //     try {
+  //       this.db.project.delete({
+  //         where: {
+  //           id: Number(id),
+  //           asignee: userid,
+  //         },
+  //       });
+  //     } catch (e) {
+  //       console.log(e);
+  //       throw new HttpException('database error', 404);
+  //     }
+  //   });
+  // }
 }

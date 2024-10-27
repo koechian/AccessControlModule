@@ -31,7 +31,6 @@ CREATE TABLE "Project" (
     "clientName" TEXT NOT NULL,
     "projectedCost" INTEGER NOT NULL,
     "isAssigned" BOOLEAN NOT NULL,
-    "asignee" TEXT,
     "status" TEXT NOT NULL DEFAULT 'ongoing',
     "startDate" DATETIME NOT NULL,
     "endDate" DATETIME,
@@ -42,11 +41,11 @@ CREATE TABLE "Project" (
 -- CreateTable
 CREATE TABLE "ProjectUserLink" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "userID" INTEGER NOT NULL,
-    "projectID" INTEGER NOT NULL,
+    "userID" TEXT NOT NULL,
+    "projectID" TEXT NOT NULL,
     "assignedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "ProjectUserLink_userID_fkey" FOREIGN KEY ("userID") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "ProjectUserLink_projectID_fkey" FOREIGN KEY ("projectID") REFERENCES "Project" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "ProjectUserLink_userID_fkey" FOREIGN KEY ("userID") REFERENCES "User" ("userid") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "ProjectUserLink_projectID_fkey" FOREIGN KEY ("projectID") REFERENCES "Project" ("projectId") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateIndex

@@ -61,9 +61,10 @@ watch(
         "
       >
         <CalendarIcon class="mr-2 h-4 w-4" />
-        {{
-          value ? df.format(value.toDate(getLocalTimeZone())) : 'Pick a date'
-        }}
+        <!-- {{
+          value ? df.format(value.toDate(getLocalTimeZone())) : 
+        }} -->
+        Pick a date
       </Button>
     </PopoverTrigger>
     <PopoverContent class="w-auto p-0">
