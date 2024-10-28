@@ -68,3 +68,41 @@ model ProjectUserLink{
   @@unique([userID,projectID])
 }
 
+// CRM MODELS 
+
+model Customer {
+  id           Int        @id @default(autoincrement())
+  name         String
+  email        String     @unique
+  phone        String?
+  companyName  String?
+  address      String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  leads        Lead[]
+  interactions Interaction[]
+}
+
+model Lead {
+  id           Int        @id @default(autoincrement())
+  customerId   Int
+  status       String     @default("PENDING") // Replacing enum with String type
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  customer     Customer   @relation(fields: [customerId], references: [id])
+  interactions Interaction[]
+}
+
+model Interaction {
+  id        Int      @id @default(autoincrement())
+  leadId    Int
+  type      String   // Replacing enum with String type
+  details   String?
+  createdAt DateTime @default(now())
+  lead      Lead     @relation(fields: [leadId], references: [id])
+
+  Customer Customer[]
+}
+
+
+

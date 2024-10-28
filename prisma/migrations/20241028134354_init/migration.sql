@@ -48,6 +48,46 @@ CREATE TABLE "ProjectUserLink" (
     CONSTRAINT "ProjectUserLink_projectID_fkey" FOREIGN KEY ("projectID") REFERENCES "Project" ("projectId") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
+-- CreateTable
+CREATE TABLE "Customer" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "phone" TEXT,
+    "companyName" TEXT,
+    "address" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Lead" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "customerId" INTEGER NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'PENDING',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "Lead_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Interaction" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "leadId" INTEGER NOT NULL,
+    "type" TEXT NOT NULL,
+    "details" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Interaction_leadId_fkey" FOREIGN KEY ("leadId") REFERENCES "Lead" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "_CustomerToInteraction" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL,
+    CONSTRAINT "_CustomerToInteraction_A_fkey" FOREIGN KEY ("A") REFERENCES "Customer" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "_CustomerToInteraction_B_fkey" FOREIGN KEY ("B") REFERENCES "Interaction" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_userid_key" ON "User"("userid");
 
@@ -71,3 +111,12 @@ CREATE UNIQUE INDEX "Project_projectId_key" ON "Project"("projectId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ProjectUserLink_userID_projectID_key" ON "ProjectUserLink"("userID", "projectID");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Customer_email_key" ON "Customer"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_CustomerToInteraction_AB_unique" ON "_CustomerToInteraction"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_CustomerToInteraction_B_index" ON "_CustomerToInteraction"("B");

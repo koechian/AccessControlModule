@@ -110,11 +110,65 @@ export async function createFakeProject() {
   });
 }
 
+// Mock up data for CRM module as well
+
+export async function createFakeCustomer() {
+  const name = faker.person.fullName();
+  const email = faker.internet.email();
+  const phone = faker.phone.number({ style: 'national' });
+  const companyName = faker.company.name();
+  const address = faker.location.streetAddress();
+
+  return prisma.customer.create({
+    data: {
+      name,
+      email,
+      phone,
+      companyName,
+      address,
+      createdAt: faker.date.past(),
+      updatedAt: new Date(),
+    },
+  });
+}
+
+export async function createFakeLead(customerId: number) {
+  const statuses = ['PENDING', 'CONTACTED', 'QUALIFIED', 'CONVERTED'];
+  const status = faker.helpers.arrayElement(statuses);
+
+  return prisma.lead.create({
+    data: {
+      customerId,
+      status,
+      createdAt: faker.date.past(),
+      updatedAt: new Date(),
+    },
+  });
+}
+
+export async function createFakeInteraction(leadId: number) {
+  const types = ['PHONE_CALL', 'EMAIL', 'MEETING', 'OTHER'];
+  const type = faker.helpers.arrayElement(types);
+  const details = faker.lorem.sentence();
+
+  return prisma.interaction.create({
+    data: {
+      leadId,
+      type,
+      details,
+      createdAt: faker.date.past(),
+    },
+  });
+}
+
 async function main() {
   // Drop all existing data from the database for migrations
   await prisma.$transaction([
     prisma.project.deleteMany(),
     prisma.user.deleteMany(),
+    prisma.customer.deleteMany(),
+    prisma.lead.deleteMany(),
+    prisma.interaction.deleteMany(),
   ]);
 
   // Create an Admin
@@ -135,6 +189,28 @@ async function main() {
   const projects = Array.from({ length: 5 }).map(() => createFakeProject());
   await Promise.all(projects);
   console.log('5 Projects created.');
+
+  // Create 5 Customers, each with multiple leads and interactions
+  const customers = await Promise.all(
+    Array.from({ length: 5 }).map(() => createFakeCustomer()),
+  );
+  console.log('5 Customers created.');
+
+  for (const customer of customers) {
+    // Create 3 leads per customer
+    const leads = await Promise.all(
+      Array.from({ length: 3 }).map(() => createFakeLead(customer.id)),
+    );
+    console.log(`3 Leads created for Customer ID ${customer.id}`);
+
+    for (const lead of leads) {
+      // Create 2 interactions per lead
+      await Promise.all(
+        Array.from({ length: 2 }).map(() => createFakeInteraction(lead.id)),
+      );
+      console.log(`2 Interactions created for Lead ID ${lead.id}`);
+    }
+  }
 }
 
 main()
