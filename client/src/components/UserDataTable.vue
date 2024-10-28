@@ -17,6 +17,8 @@ import { Toaster } from 'vue-sonner';
 import CreateUserSheet from './CreateUserSheet.vue';
 import EditUserSheet from './EditUserSheet.vue';
 
+const auth = JSON.parse(sessionStorage.getItem('auth'));
+
 const props = defineProps({
   data: {
     type: Array,
@@ -49,7 +51,10 @@ function closeEditSheet(rowId) {
 <template>
   <div class="flex justify-between">
     <h4 class="mb-5 text-xl font-semibold">Employees Information</h4>
-    <Button @click="openCreateSheet" class="bg-[#297045] hover:bg-[#2E933C]"
+    <Button
+      v-if="auth.role == 'Admin'"
+      @click="openCreateSheet"
+      class="bg-[#297045] hover:bg-[#2E933C]"
       ><div class="flex gap-2">
         <PhFilePlus :size="22" />
         Add new Employee
@@ -73,7 +78,9 @@ function closeEditSheet(rowId) {
         <TableHead class="w-[100px]"> Phonenumber</TableHead>
         <TableHead class="w-[100px]"> Role</TableHead>
         <TableHead class="w-[100px]"> KRA Pin</TableHead>
-        <TableHead class="w-[100px]"> Actions</TableHead>
+        <TableHead v-if="auth.role == 'Admin'" class="w-[100px]">
+          Actions</TableHead
+        >
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -84,7 +91,7 @@ function closeEditSheet(rowId) {
         <TableCell>{{ row.phonenumber }}</TableCell>
         <TableCell>{{ row.role }}</TableCell>
         <TableCell>{{ row.KRAPin }}</TableCell>
-        <TableCell>
+        <TableCell v-if="auth.role == 'Admin'">
           <Button @click="openEditSheet(row.id)"
             ><div class="flex gap-2">
               <PhPencilSimple size="20" color="#ffff" />

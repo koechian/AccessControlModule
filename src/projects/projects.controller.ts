@@ -39,7 +39,6 @@ export class ProjectsController {
 
   // open to:[Project Manager, Admin]
   @Role('Admin')
-  @Role('Project Manager')
   @Get('getProjects')
   findAll(@Query('sort') sort: 'asc' | 'desc' = 'desc') {
     // Implement Alphabetical Sorting
@@ -53,14 +52,21 @@ export class ProjectsController {
     return this.projectsService.findOne(id['id']);
   }
 
+  // Open to Project Manager
+  @Role('Project Manager', 'Admin')
   @Get('assigned')
-  findAllAssigned(@Body() userid: string) {
-    return this.projectsService.findAllAssigned(userid);
+  async findAllAssigned(@Response() res: any, @Body() userid: string) {
+    const data = await this.projectsService.findAllAssigned(userid);
+
+    if (data) {
+      return res.status(200).json(data);
+    }
+    throw new HttpException('Error getting Projects', HttpStatus.BAD_GATEWAY);
   }
 
   // Edits any Project
   // open to:[Admin]
-  @Role('Admin')
+  @Role('Admin', 'Project Manager')
   @Put('updateProject')
   updateProject(@Response() res: any, @Body() body: ProjectDefinition) {
     // Add the details to be updated as an Object/Body
@@ -76,9 +82,8 @@ export class ProjectsController {
   }
 
   // open to: [Admin, Project Manager]
-  @Role('Admin')
-  @Role('Project Manager')
-  @Put('updateProject/:id')
+  @Role('Admin', 'Project Manager')
+  @Put('updateAssignedProject')
   updateAssignedProject(
     @Param() id: Number,
     @Param() userid: string,

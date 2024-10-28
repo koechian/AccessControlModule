@@ -27,12 +27,15 @@ async function dataFetcher(type) {
   const endpoint =
     type === 'users'
       ? 'http://localhost:3000/users/getAllUsers'
-      : 'http://localhost:3000/projects/getProjects';
+      : auth.role === 'Admin'
+        ? 'http://localhost:3000/projects/getProjects'
+        : 'http://localhost:3000/projects/assigned';
   try {
     const response = await axios.get(endpoint, {
       headers: {
         Authorization: `Bearer ${auth.accessToken}`,
       },
+      data: { userid: auth.userid },
     });
     if (type === 'users') {
       usersData.value = response.data;

@@ -12,7 +12,6 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() body: UserLogin) {
-    console.log(body);
     const result = await this.auth.authenticate(body);
 
     return result;

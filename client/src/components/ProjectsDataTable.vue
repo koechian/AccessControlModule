@@ -181,8 +181,14 @@ function formatDate(isoString) {
 
 <template>
   <div class="flex justify-between">
-    <h4 class="mb-5 text-xl font-semibold">All Projects Outline</h4>
-    <Button @click="openSheet" class="bg-[#297045] hover:bg-[#2E933C]"
+    <h4 v-if="auth.role == 'Admin'" class="mb-5 text-xl font-semibold">
+      All Projects
+    </h4>
+    <h4 v-else class="mb-5 text-xl font-semibold">Your Assigned Projects</h4>
+    <Button
+      v-if="auth.role == 'Admin'"
+      @click="openSheet"
+      class="bg-[#297045] hover:bg-[#2E933C]"
       ><div class="flex gap-2">
         <PhFilePlus :size="22" />
         Create new Project
@@ -197,7 +203,7 @@ function formatDate(isoString) {
 
   <Toaster></Toaster>
 
-  <Table>
+  <Table v-if="data.length > 0">
     <TableCaption
       >This is a list of company projects, past and present.</TableCaption
     >
@@ -208,7 +214,6 @@ function formatDate(isoString) {
         <TableHead class="text-center"> Client Name</TableHead>
         <TableHead class="text-center"> Projected Cost</TableHead>
         <TableHead class="text-center"> Assigned</TableHead>
-        <TableHead class="text-center"> Asignee</TableHead>
         <TableHead class="text-center"> Status</TableHead>
         <TableHead class="text-center"> Date Started</TableHead>
         <TableHead class="text-center"> Projected End</TableHead>
@@ -234,15 +239,6 @@ function formatDate(isoString) {
             <span class="text-[#FE5F00] text-xs" v-else>Not Assigned</span>
           </div></TableCell
         >
-        <TableCell
-          ><div class="text-center">
-            {{
-              row.isAssigned && row.users[0]?.user
-                ? row.users[0].user.firstname + ' ' + row.users[0].user.lastname
-                : '-'
-            }}
-          </div>
-        </TableCell>
         <TableCell>
           <div class="justify-items-center text-center">
             <component
@@ -349,7 +345,7 @@ function formatDate(isoString) {
                       :placeholder="formatPrice(row.projectedCost)"
                     />
                   </div>
-                  <div class="mt-3 flex gap-2">
+                  <div v-if="auth.role == 'Admin'" class="mt-3 flex gap-2">
                     <input
                       type="checkbox"
                       name="assigned"
@@ -374,7 +370,10 @@ function formatDate(isoString) {
                     </select>
                   </div>
 
-                  <div class="mt-3 flex flex-col gap-2">
+                  <div
+                    v-if="auth.role == 'Admin'"
+                    class="mt-3 flex flex-col gap-2"
+                  >
                     <label for="">Asignee</label>
                     <SelectAsignee
                       :isEnabled="updateform.isAssigned"
@@ -389,7 +388,7 @@ function formatDate(isoString) {
                   </div>
                   <Button>Apply Changes</Button>
                 </form>
-                <AlertDialog>
+                <AlertDialog v-if="auth.role == 'Admin'">
                   <AlertDialogTrigger>
                     <Button class="mt-20" variant="destructive">
                       <div class="flex gap-2">
@@ -422,4 +421,7 @@ function formatDate(isoString) {
       </TableRow>
     </TableBody>
   </Table>
+  <div v-else>
+    No Projects to Display, ask your Admin to assign projects to you
+  </div>
 </template>

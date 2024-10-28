@@ -64,19 +64,26 @@ export class ProjectsService {
   }
 
   // Finds all projects that have been assigned to a specific person
-  async findAllAssigned(userid: string) {
-    // Look for all projects linked to the user in the ProjectUserLink table
-    return this.db.project.findMany({
-      where: {
-        users: {
-          some: {
-            user: {
-              userid: userid,
-            },
-          },
+  async findAllAssigned(user_id: string) {
+    try {
+      // Find all projects assigned to the user by querying the ProjectUserLink table
+      const projects = await this.db.projectUserLink.findMany({
+        where: {
+          userID: user_id['userid'],
         },
-      },
-    });
+        include: {
+          project: true,
+        },
+      });
+
+      // Map and return only the relevant project details
+      const assignedProjects = projects.map((link) => link.project);
+
+      return assignedProjects;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
   }
 
   //   Creates a new project from the Data Object

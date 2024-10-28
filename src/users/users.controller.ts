@@ -48,8 +48,7 @@ export class UsersController {
     private projectsService: ProjectsService,
   ) {}
 
-  @Role('Admin')
-  @Role('Project Manager')
+  @Role('Admin', 'Project Manager')
   @Get('getAllUsers')
   findAll(
     @Query('limit', new DefaultValuePipe(100), ParseIntPipe) limit: Number,
