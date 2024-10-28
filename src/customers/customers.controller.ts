@@ -37,8 +37,8 @@ export class CustomerController {
 
   // Get all customers (with optional search and filter parameters)
   @Get('getCustomers')
-  getAllCustomers(@Query() query: CustomerQueryDto) {
-    return this.customerService.getAll(query);
+  async getAllCustomers(@Query() query: CustomerQueryDto) {
+    return await this.customerService.getAll(query);
   }
 
   // Get a single customer by ID
@@ -48,17 +48,31 @@ export class CustomerController {
   }
 
   // Update customer details
-  @Put(':id')
-  updateCustomer(
+  @Put('updateCustomer/:id')
+  async updateCustomer(
+    @Response() res: any,
     @Param('id') id: string,
     @Body() updateCustomerDto: UpdateCustomerDto,
   ) {
-    /* ... */
+    // Add the details to be updated as an Object/Body
+    if (await this.customerService.updateCustomer(updateCustomerDto))
+      return res.status(200).json({ message: 'User has been Updated' });
+
+    throw new HttpException(
+      'Error updating the project',
+      HttpStatus.BAD_GATEWAY,
+    );
   }
 
   // Delete a customer
-  @Delete(':id')
-  deleteCustomer(@Param('id') id: string) {
-    /* ... */
+  @Delete('deleteCustomer/:id')
+  async deleteUser(@Response() res: any, @Param() id: string) {
+    if (await this.customerService.deleteCustomer(id['id']))
+      return res.status(200).json({ message: 'Customer Deleted' });
+    else
+      throw new HttpException(
+        'Error Deleting the customer',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
   }
 }

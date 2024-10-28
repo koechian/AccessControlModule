@@ -24,6 +24,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import EditCustomerSheet from './EditCustomerSheet.vue';
 
 const auth = JSON.parse(sessionStorage.getItem('auth'));
 
@@ -105,12 +106,11 @@ function closeEditSheet(rowId) {
               Edit
             </div>
           </Button>
-
-          <EditUserSheet
+          <EditCustomerSheet
             :isOpen="editStates[row.id] || false"
             :row="row"
             :id="row.id"
-            @user-updated="childEmiter"
+            @customerAdded="childEmiter"
             @update:isOpen="closeEditSheet(row.id)"
           />
         </TableCell>

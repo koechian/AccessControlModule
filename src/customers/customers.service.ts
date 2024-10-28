@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCustomerDto } from './DTOs/CreateCustomer.dto';
 import { CustomerQueryDto } from './DTOs/CustomerQuery.dto';
 
 type UpdateCustomer = {
-  name: string;
+  name?: string;
 
-  email: string;
+  email?: string;
 
   phone?: string;
 
@@ -61,7 +61,7 @@ export class CustomersService {
   //   Updates the defined project
   async updateCustomer(body: UpdateCustomer) {
     try {
-      await this.db.user.update({
+      await this.db.customer.update({
         where: {
           email: body.email,
         },
@@ -76,46 +76,43 @@ export class CustomersService {
   }
 
   //   Deletes the defined project from the database
-  //   async deleteCustomer(user_id: number) {
-  //     try {
-  //       // Ensure the user exists before attempting deletion
-  //       const user = await this.db.user.findUnique({
-  //         where: { id: Number(user_id) },
-  //       });
+  async deleteCustomer(customerId: number): Promise<{ message: string }> {
+    // Start a transaction to handle related deletions
+    await this.db.$transaction(async (prisma) => {
+      // Check if the customer exists
+      const customer = await this.db.customer.findUnique({
+        where: { id: customerId },
+      });
+      if (!customer) {
+        throw new NotFoundException(
+          `Customer with ID ${customerId} not found.`,
+        );
+      }
 
-  //       if (!user) {
-  //         console.log('User does not exist');
-  //         return false;
-  //       }
+      // Delete all interactions related to leads of the customer
+      await this.db.interaction.deleteMany({
+        where: {
+          lead: {
+            customerId: customerId,
+          },
+        },
+      });
 
-  //       // Get the projectDetails of any related Projects
-  //       const projects = await this.db.projectUserLink.findMany({
-  //         where: {
-  //           userID: user.userid,
-  //         },
-  //         select: {
-  //           projectID: true,
-  //         },
-  //       });
+      // Delete all leads associated with the customer
+      await this.db.lead.deleteMany({
+        where: {
+          customerId: customerId,
+        },
+      });
 
-  //       // Delete any assigned projects from the database
-  //       await this.db.projectUserLink.deleteMany({
-  //         where: {
-  //           user: {
-  //             userid: user.userid,
-  //           },
-  //         },
-  //       });
+      // Delete the customer
+      await this.db.customer.delete({
+        where: { id: customerId },
+      });
+    });
 
-  //       // Safely delete the user
-  //       await this.db.user.delete({
-  //         where: { id: Number(user_id) },
-  //       });
-
-  //       return true;
-  //     } catch (e) {
-  //       console.log(e);
-  //       return false;
-  //     }
-  //   }
+    return {
+      message: `Customer with ID ${customerId} and all related data have been deleted.`,
+    };
+  }
 }

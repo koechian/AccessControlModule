@@ -18,6 +18,10 @@ const auth = JSON.parse(sessionStorage.getItem('auth'));
 const username = ref(auth.username);
 const router = useRouter();
 
+function switchToCrm() {
+  router.push('/crmlogin');
+}
+
 async function handleLogout(event) {
   event.preventDefault();
 
@@ -71,9 +75,9 @@ async function handleLogout(event) {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel class="hover:cursor-pointer">
-            <div class="flex gap-3 font-medium">
+            <div @click="switchToCrm" class="flex gap-3 font-medium">
               <PhIdentificationCard :size="18" />
-              My Profile
+              Switch to CRM
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
