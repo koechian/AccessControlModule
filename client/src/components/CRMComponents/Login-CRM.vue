@@ -8,18 +8,14 @@
         href="#"
         className="flex items-center gap-3  mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
       >
-        <svg
-          role="img"
-          className="w-1 h-1 mr-4"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <title>ABB RobotStudio</title>
           <path
-            d="M1.291.068A1.29 1.29 0 0 0 0 1.36v3.352a1.29 1.29 0 0 0 1.291 1.291h3.354a1.29 1.29 0 0 0 1.289-1.291V1.359A1.29 1.29 0 0 0 4.644.07Zm9.033 0a1.29 1.29 0 0 0-1.29 1.291v3.352a1.29 1.29 0 0 0 1.29 1.291H22.71A1.29 1.29 0 0 0 24 4.711V1.359A1.29 1.29 0 0 0 22.709.07ZM1.291 9.033A1.29 1.29 0 0 0 0 10.323v3.353a1.29 1.29 0 0 0 1.291 1.29h21.418A1.29 1.29 0 0 0 24 13.677v-3.354a1.29 1.29 0 0 0-1.291-1.289Zm0 8.965A1.29 1.29 0 0 0 0 19.289v3.352a1.29 1.29 0 0 0 1.291 1.29h12.385a1.29 1.29 0 0 0 1.29-1.29v-3.352a1.29 1.29 0 0 0-1.29-1.291zm18.064 0a1.29 1.29 0 0 0-1.289 1.291v3.352a1.29 1.29 0 0 0 1.29 1.29h3.353A1.29 1.29 0 0 0 24 22.642v-3.352a1.29 1.29 0 0 0-1.291-1.291z"
+            d="M23.999 12.465a9.601 9.601 0 01-19.203 0h1.07a8.53 8.53 0 108.533-8.53v-1.07A9.6 9.6 0 0124 12.463zm-9.6-3.2a3.2 3.2 0 103.2 3.2 3.2 3.2 0 00-3.2-3.2zm-2 0l-.6-6.672-2.462 1.92-1.46-1.44a4.67 4.67 0 00-5.62-.37l-2.02 1.3a.54.54 0 00-.15.74.54.54 0 00.74.15l2-1.31a3.64 3.64 0 014.29.22l1.37 1.38-2.29 1.821z"
           />
         </svg>
 
-        <h2>Sahihi Interior Builders</h2>
+        <h2>Acme CRM Platform</h2>
       </a>
       <div
         className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
@@ -62,10 +58,10 @@
             </div>
             <div className="flex items-center justify-end">
               <button
-                @click.prevent="navigateToCrm"
+                @click.prevent="navigateToRBAC"
                 className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
               >
-                CRM Platform Login
+                RBAC Module Login
               </button>
             </div>
             <button
@@ -96,7 +92,7 @@ onMounted(() => {
     const auth = JSON.parse(sessionStorage.getItem('auth'));
 
     if (auth?.accessToken) {
-      router.push('/dashboard');
+      router.push('/crmdashboard');
     }
   } catch (error) {
     console.log(error);
@@ -106,8 +102,8 @@ onMounted(() => {
 const username = ref('');
 const password = ref('');
 
-function navigateToCrm() {
-  router.push('/crmlogin');
+function navigateToRBAC() {
+  router.push('/');
 }
 
 const submitForm = async () => {
@@ -120,7 +116,7 @@ const submitForm = async () => {
     if (response.status == 201) {
       toast.success('Logged in sucesfully');
       sessionStorage.setItem('auth', JSON.stringify(response.data));
-      router.push('/dashboard');
+      router.push('/crmdashboard');
     } else {
       toast.error('Error Logging In');
     }
