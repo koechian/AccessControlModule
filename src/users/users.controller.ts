@@ -27,9 +27,7 @@ type UserLogin = {
   username: string;
   password: string;
 };
-type UserDeleteBody = {
-  userid: string;
-};
+
 type UserUpdateBody = {
   firstname?: string;
   lastname?: string;
@@ -43,10 +41,7 @@ type UserUpdateBody = {
 @UseGuards(RolesGuard)
 @UseGuards(UserGuard)
 export class UsersController {
-  constructor(
-    private userService: UsersService,
-    private projectsService: ProjectsService,
-  ) {}
+  constructor(private userService: UsersService) {}
 
   @Role('Admin', 'Project Manager')
   @Get('getAllUsers')
