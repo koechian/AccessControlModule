@@ -51,7 +51,7 @@ async function dataFetcher() {
       Select Employee to assign to
     </option>
     <option v-for="user in usersData" :id="user.id" :value="user.userid">
-      {{ user.firstname + ' ' + user.lastname }}
+      {{ user.firstname + ' ' + user.lastname + ' | ' + user.role }}
     </option>
   </select>
 </template>

@@ -75,7 +75,10 @@ async function handleLogout(event) {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuLabel class="hover:cursor-pointer">
+          <DropdownMenuLabel
+            v-if="(auth.role == 'Admin') | 'Project Manager'"
+            class="hover:cursor-pointer"
+          >
             <div
               @click="$emit('toggleTable', 'users')"
               class="flex gap-3 font-medium"
@@ -84,7 +87,10 @@ async function handleLogout(event) {
               Employees
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuLabel class="hover:cursor-pointer">
+          <DropdownMenuLabel
+            v-if="(auth.role == 'Admin') | 'Project Manager'"
+            class="hover:cursor-pointer"
+          >
             <div
               @click="$emit('toggleTable', 'projects')"
               class="flex gap-3 font-medium"
@@ -93,7 +99,9 @@ async function handleLogout(event) {
               Projects
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator
+            v-if="(auth.role == 'Admin') | 'Project Manager'"
+          />
           <DropdownMenuLabel>
             <button
               class="font-medium text-red-400 hover:text-red-800 hover:cursor-pointer"

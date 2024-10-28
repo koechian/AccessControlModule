@@ -53,7 +53,7 @@ export class ProjectsController {
   }
 
   // Open to Project Manager
-  @Role('Project Manager', 'Admin')
+  @Role('Project Manager', 'Admin', 'Engineer')
   @Get('assigned')
   async findAllAssigned(@Response() res: any, @Body() userid: string) {
     const data = await this.projectsService.findAllAssigned(userid);

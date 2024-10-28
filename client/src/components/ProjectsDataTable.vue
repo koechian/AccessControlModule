@@ -217,7 +217,12 @@ function formatDate(isoString) {
         <TableHead class="text-center"> Status</TableHead>
         <TableHead class="text-center"> Date Started</TableHead>
         <TableHead class="text-center"> Projected End</TableHead>
-        <TableHead class="text-center"> Actions</TableHead>
+        <TableHead
+          v-if="(auth.role === 'Admin') | 'Project Manager'"
+          lass="text-center"
+        >
+          Actions</TableHead
+        >
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -275,7 +280,7 @@ function formatDate(isoString) {
         </TableCell>
         <TableCell>{{ formatDate(row.startDate) }}</TableCell>
         <TableCell>{{ formatDate(row.endDate) }}</TableCell>
-        <TableCell>
+        <TableCell v-if="(auth.role === 'Admin') | 'Project Manager'">
           <Sheet>
             <SheetTrigger>
               <Button @click="populateForm(row)"

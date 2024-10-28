@@ -13,7 +13,8 @@ let projectsData = ref([]);
 const selectedTable = ref('users');
 
 onMounted(() => {
-  dataFetcher('users');
+  if (auth.role === 'Engineer') dataFetcher('projects');
+  else dataFetcher('users');
 });
 
 function toggleDataFetched(type) {
@@ -64,10 +65,16 @@ function handleUserUpdate() {
       <Badge class="font-medium hover:cursor-default">{{ auth.role }}</Badge>
     </div>
     <component
+      v-if="(auth.role == 'Admin') | 'Project Manager'"
       :is="selectedTable === 'users' ? UserDataTable : ProjectsDataTable"
       :data="selectedTable === 'users' ? usersData : projectsData"
       @project-updated="handleProjectsUpdate"
       @user-updated="handleUserUpdate"
+    />
+    <ProjectsDataTable
+      v-else
+      :data="projectsData"
+      @project-updated="handleProjectsUpdate"
     />
   </section>
 
