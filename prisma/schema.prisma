@@ -86,7 +86,7 @@ model Customer {
 model Lead {
   id           Int        @id @default(autoincrement())
   customerId   Int
-  status       String     @default("PENDING") // Replacing enum with String type
+  status       String     @default("PENDING") 
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   customer     Customer   @relation(fields: [customerId], references: [id])
@@ -96,7 +96,7 @@ model Lead {
 model Interaction {
   id        Int      @id @default(autoincrement())
   leadId    Int
-  type      String   // Replacing enum with String type
+  type      String  
   details   String?
   createdAt DateTime @default(now())
   lead      Lead     @relation(fields: [leadId], references: [id])

@@ -1,5 +1,5 @@
-import DashboardCRM from '@/components/CRMComponents/Dashboard-CRM.vue';
-import LoginCRM from '@/components/CRMComponents/Login-CRM.vue';
+import DashboardCRM from '@/views/CRMViews/Dashboard-CRM.vue';
+import LoginCRM from '@/views/CRMViews/Login-CRM.vue';
 import Dashboard from '@/views/Dashboard.vue';
 import Login from '@/views/Login.vue';
 import { createMemoryHistory, createRouter } from 'vue-router';

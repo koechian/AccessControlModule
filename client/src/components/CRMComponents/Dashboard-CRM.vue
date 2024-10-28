@@ -1,1 +1,0 @@
-<template>CRM Dashboard</template>
