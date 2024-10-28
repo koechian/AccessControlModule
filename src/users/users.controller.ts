@@ -27,6 +27,15 @@ type UserLogin = {
   password: string;
 };
 
+type UserUpdateBody = {
+  firstname?: string;
+  lastname?: string;
+  username?: string;
+  email?: string;
+  phonenumber?: string;
+  role?: string;
+};
+
 @Controller('users')
 @UseGuards(RolesGuard)
 @UseGuards(UserGuard)
@@ -55,14 +64,16 @@ export class UsersController {
   }
 
   @Role('Admin')
-  @Put('updateUser/:id')
-  async updateUser(@Param() id: Number, @Body() body: any) {
-    // Update the project from the Database
-    const user = await this.userService.updateUser(id['id']);
+  @Put('updateUser')
+  async updateUser(@Response() res: any, @Body() body: UserUpdateBody) {
+    // Add the details to be updated as an Object/Body
+    if (await this.userService.updateUser(body))
+      return res.status(200).json({ message: 'User has been Updated' });
 
-    if (!user) {
-      throw new NotFoundException('No such user exists');
-    }
+    throw new HttpException(
+      'Error updating the project',
+      HttpStatus.BAD_GATEWAY,
+    );
   }
 
   @Role('Admin')

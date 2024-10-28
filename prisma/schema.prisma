@@ -18,8 +18,8 @@ datasource db {
 model User{
   id Int @default(autoincrement()) @id
   userid String @unique @default(uuid())
-  firstName String
-  lastName String
+  firstname String
+  lastname String
   username String @unique
   email String @unique
   phonenumber String @unique

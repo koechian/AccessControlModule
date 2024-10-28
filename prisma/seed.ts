@@ -7,9 +7,12 @@ const prisma = new PrismaClient();
 const roles = ['Admin', 'Engineer', 'Project Manager'];
 
 export async function createEngineer() {
-  const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName();
-  const username = faker.internet.displayName({ firstName, lastName });
+  const firstname = faker.person.firstName();
+  const lastname = faker.person.lastName();
+  const username = faker.internet.displayName({
+    firstName: firstname,
+    lastName: lastname,
+  });
   const email = faker.internet.email();
   const phoneNumber = faker.phone.number({ style: 'national' });
   const KRAPin = faker.string.alphanumeric({ length: 10 });
@@ -17,8 +20,8 @@ export async function createEngineer() {
 
   return prisma.user.create({
     data: {
-      firstName,
-      lastName,
+      firstname,
+      lastname,
       username,
       email,
       password,
@@ -30,9 +33,12 @@ export async function createEngineer() {
 }
 
 export async function createPM() {
-  const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName();
-  const username = faker.internet.displayName({ firstName, lastName });
+  const firstname = faker.person.firstName();
+  const lastname = faker.person.lastName();
+  const username = faker.internet.displayName({
+    firstName: firstname,
+    lastName: lastname,
+  });
   const email = faker.internet.email();
   const phoneNumber = faker.phone.number({ style: 'national' });
   const KRAPin = faker.string.alphanumeric({ length: 10 });
@@ -40,8 +46,8 @@ export async function createPM() {
 
   return prisma.user.create({
     data: {
-      firstName,
-      lastName,
+      firstname,
+      lastname,
       username,
       email,
       password,
@@ -53,9 +59,12 @@ export async function createPM() {
 }
 
 export async function createAdmin() {
-  const firstName: string = faker.person.firstName();
-  const lastName = faker.person.lastName();
-  const username = faker.internet.displayName({ firstName, lastName });
+  const firstname = faker.person.firstName();
+  const lastname = faker.person.lastName();
+  const username = faker.internet.displayName({
+    firstName: firstname,
+    lastName: lastname,
+  });
   const email = faker.internet.email();
   const phoneNumber = faker.phone.number({ style: 'national' });
   const KRAPin = faker.string.alphanumeric({ length: 10 });
@@ -63,8 +72,8 @@ export async function createAdmin() {
 
   return prisma.user.create({
     data: {
-      firstName,
-      lastName,
+      firstname,
+      lastname,
       username,
       email,
       phonenumber: phoneNumber,

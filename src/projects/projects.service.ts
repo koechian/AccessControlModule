@@ -26,8 +26,8 @@ export class ProjectsService {
           select: {
             user: {
               select: {
-                firstName: true,
-                lastName: true,
+                firstname: true,
+                lastname: true,
               },
             },
           },
@@ -51,8 +51,8 @@ export class ProjectsService {
             user: {
               select: {
                 id: true,
-                firstName: true,
-                lastName: true,
+                firstname: true,
+                lastname: true,
                 email: true,
                 username: true,
               },

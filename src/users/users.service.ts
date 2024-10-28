@@ -1,6 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+
+type UserUpdateBody = {
+  userid?: string;
+  firstname?: string;
+  lastname?: string;
+  username?: string;
+  email?: string;
+  phonenumber?: string;
+  role?: string;
+};
+
 @Injectable()
 export class UsersService {
   constructor(private db: PrismaService) {}
@@ -9,7 +20,7 @@ export class UsersService {
     return this.db.user.findMany({
       omit: { password: true },
       orderBy: {
-        firstName: 'asc',
+        firstname: 'asc',
       },
     });
   }
@@ -36,15 +47,24 @@ export class UsersService {
   }
 
   //   Updates the defined project
-  async updateUser(id: Number) {
-    return `Updated user ${id}`;
+  async updateUser(body: UserUpdateBody) {
+    try {
+      await this.db.user.update({
+        where: {
+          userid: body.userid,
+        },
+        data: body,
+      });
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
   }
 
   //   Deletes the defined project from the database
   async deleteUser(id: Number) {
     return `User ${id} deleted`;
   }
-
-  // Deletes multiple projects from the database at a go
-  async deleteUsers(ids: Number[]) {}
 }

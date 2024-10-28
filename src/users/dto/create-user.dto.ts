@@ -14,8 +14,8 @@ enum Role {
 
 export class CreateUserDto {
   @IsNotEmpty()
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
 
   @IsNotEmpty()
   username: string;

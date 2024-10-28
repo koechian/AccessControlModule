@@ -238,7 +238,7 @@ function formatDate(isoString) {
           ><div class="text-center">
             {{
               row.isAssigned && row.users[0]?.user
-                ? row.users[0].user.firstName + ' ' + row.users[0].user.lastName
+                ? row.users[0].user.firstname + ' ' + row.users[0].user.lastname
                 : '-'
             }}
           </div>

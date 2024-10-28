@@ -1,7 +1,7 @@
 <script setup>
 import { Sheet, SheetContent, SheetHeader } from '@/components/ui/sheet';
 import Button from './ui/button/Button.vue';
-import { ref, watch } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { toast } from 'vue-sonner';
 import axios from 'axios';
 
@@ -16,8 +16,8 @@ const emit = defineEmits(['update:isOpen', 'userUpdated']);
 const auth = JSON.parse(sessionStorage.getItem('auth'));
 
 const submitForm = ref({
-  firstName: '',
-  lastName: '',
+  firstname: '',
+  lastname: '',
   username: '',
   email: '',
   phonenumber: 0,
@@ -26,7 +26,7 @@ const submitForm = ref({
   KRAPin: undefined,
 });
 
-watch(() => {
+watchEffect(() => {
   props.isOpen,
     (newVal) => {
       if (!newVal) {
@@ -37,8 +37,8 @@ watch(() => {
 
 function resetForm() {
   submitForm.value = {
-    firstName: '',
-    lastName: '',
+    firstname: '',
+    lastname: '',
     username: '',
     email: '',
     phonenumber: 0,
@@ -48,7 +48,7 @@ function resetForm() {
   };
 }
 
-async function createProjectSubmit() {
+async function createUserSubmit() {
   try {
     // Create form data object with only valid values
     const userData = {};
@@ -93,14 +93,14 @@ async function createProjectSubmit() {
           <h3 class="font-medium text-lg">Add a new Employee</h3>
         </SheetHeader>
 
-        <form @submit.prevent="createProjectSubmit" class="flex flex-col gap-3">
+        <form @submit.prevent="createUserSubmit" class="flex flex-col gap-3">
           <div class="mt-3 flex flex-col gap-2">
-            <label class="font-medium" for="firstName">First Name</label>
+            <label class="font-medium" for="firstname">First Name</label>
             <input
-              v-model="submitForm.firstName"
+              v-model="submitForm.firstname"
               class="border p-2 rounded-md"
               type="text"
-              name="firstName"
+              name="firstname"
               required
             />
           </div>
