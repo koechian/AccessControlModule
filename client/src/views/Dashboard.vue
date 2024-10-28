@@ -4,6 +4,7 @@ import NavBar from '@/components/NavBar.vue';
 import axios from 'axios';
 import UserDataTable from '@/components/UserDataTable.vue';
 import ProjectsDataTable from '@/components/ProjectsDataTable.vue';
+import Badge from '@/components/ui/badge/Badge.vue';
 
 const auth = JSON.parse(sessionStorage.getItem('auth'));
 const username = ref(auth.username);
@@ -52,7 +53,10 @@ function handleProjectsUpdate() {
   <NavBar @toggleTable="toggleDataFetched" />
 
   <section class="bg-[#F5F5F5] p-5 mt-5">
-    <h1 class="font-normal text-2xl mb-10">Hello, {{ username }}</h1>
+    <div class="mb-10">
+      <h1 class="font-normal text-2xl">Hello, {{ username }}</h1>
+      <Badge class="font-medium hover:cursor-default">{{ auth.role }}</Badge>
+    </div>
     <component
       :is="selectedTable === 'users' ? UserDataTable : ProjectsDataTable"
       :data="selectedTable === 'users' ? usersData : projectsData"

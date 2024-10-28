@@ -46,7 +46,7 @@ model Project {
   projectName String
   description String
   clientName String
-  projectedCost Int
+  projectedCost Float
   isAssigned Boolean
   status String @default("ongoing")
   startDate DateTime

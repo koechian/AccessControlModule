@@ -29,7 +29,7 @@ CREATE TABLE "Project" (
     "projectName" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "clientName" TEXT NOT NULL,
-    "projectedCost" INTEGER NOT NULL,
+    "projectedCost" BIGINT NOT NULL,
     "isAssigned" BOOLEAN NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'ongoing',
     "startDate" DATETIME NOT NULL,

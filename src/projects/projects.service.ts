@@ -81,11 +81,14 @@ export class ProjectsService {
 
   //   Creates a new project from the Data Object
   async createProject(projectDetails: CreateProjectDto) {
-    const project = await this.db.project.create({
-      data: projectDetails,
-    });
-
-    return project;
+    try {
+      const project = await this.db.project.create({
+        data: projectDetails,
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   // Updates the defined project and optionally assigns it to a user

@@ -96,9 +96,18 @@ export class ProjectsController {
   // Only admins
   @Role('Admin')
   @Post('createProject')
-  createProject(@Body(ValidationPipe) body: CreateProjectDto) {
+  createProject(
+    @Response() res: any,
+    @Body(ValidationPipe) body: CreateProjectDto,
+  ) {
     // Create a project and add to the database
-    return this.projectsService.createProject(body);
+    const result = this.projectsService.createProject(body);
+    if (result) return res.status(200).json({ message: 'Project created' });
+
+    throw new HttpException(
+      'Error creating the project',
+      HttpStatus.BAD_GATEWAY,
+    );
   }
 
   // Only Admins

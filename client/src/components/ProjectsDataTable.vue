@@ -41,6 +41,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import CreateProjectSheet from './CreateProjectSheet.vue';
+
 const props = defineProps({
   data: {
     type: Array,
@@ -49,9 +51,13 @@ const props = defineProps({
 });
 
 const auth = JSON.parse(sessionStorage.getItem('auth'));
+const emit = defineEmits(['projectUpdated']);
 
-const emits = defineEmits(['projectUpdated']);
+const isOpen = ref(false);
 
+function openSheet() {
+  isOpen.value = true;
+}
 const updateform = ref({
   projectName: '',
   description: '',
@@ -88,8 +94,22 @@ async function projectDelete(id) {
 
   if (response.statusText === 'OK') {
     toast.success('Project Deleted', { position: 'top-left' });
-    emits('projectUpdated');
+    emit('projectUpdated');
   }
+}
+
+function childEmiter() {
+  emit('projectUpdated');
+}
+
+function dateConverter(date) {
+  const newDate = new Date(date);
+
+  if (isNaN(newDate)) {
+    toast.error('Invalid Date format provided');
+    return;
+  }
+  return newDate.toISOString();
 }
 
 async function projectEditSubmit() {
@@ -99,13 +119,7 @@ async function projectEditSubmit() {
     for (const [key, value] of Object.entries(updateform.value)) {
       if (value !== '' && value !== null && value !== undefined) {
         if (key === 'endDate') {
-          const date = new Date(
-            updateform.value[key].year,
-            updateform.value[key].month - 1,
-            updateform.value[key].day,
-          );
-
-          changedData[key] = date.toISOString();
+          changedData[key] = dateConverter(updateform.value[key]);
         } else {
           changedData[key] = updateform.value[key];
         }
@@ -124,7 +138,7 @@ async function projectEditSubmit() {
 
     if (response.statusText === 'OK') {
       toast.success('Project Updated Successfully', { position: 'top-left' });
-      emits('projectUpdated');
+      emit('projectUpdated');
     }
 
     // Reset form after successful submission
@@ -169,12 +183,17 @@ function formatDate(isoString) {
 <template>
   <div class="flex justify-between">
     <h4 class="mb-5 text-xl font-semibold">All Projects Outline</h4>
-    <Button class="bg-[#297045] hover:bg-[#2E933C]"
+    <Button @click="openSheet" class="bg-[#297045] hover:bg-[#2E933C]"
       ><div class="flex gap-2">
         <PhFilePlus :size="22" />
         Create new Project
       </div></Button
     >
+    <CreateProjectSheet
+      :isOpen="isOpen"
+      @project-updated="childEmiter"
+      @update:isOpen="isOpen = $event"
+    />
   </div>
 
   <Toaster></Toaster>
@@ -366,7 +385,8 @@ function formatDate(isoString) {
 
                   <div class="mt-3 flex flex-col gap-2">
                     <label class="font-medium" for="">Projected End Date</label>
-                    <DatePicker v-model="updateform.endDate" />
+                    <!-- <DatePicker v-model="updateform.endDate" /> -->
+                    <input type="date" v-model="updateform.endDate" />
                   </div>
                   <Button>Apply Changes</Button>
                 </form>
