@@ -22,7 +22,7 @@ export class CustomerController {
   constructor(private customerService: CustomersService) {}
 
   // Create a new customer
-  @Post()
+  @Post('createCustomer')
   createCustomer(
     @Response() res: any,
     @Body() createCustomerDto: CreateCustomerDto,
@@ -36,7 +36,7 @@ export class CustomerController {
   }
 
   // Get all customers (with optional search and filter parameters)
-  @Get()
+  @Get('getCustomers')
   getAllCustomers(@Query() query: CustomerQueryDto) {
     return this.customerService.getAll(query);
   }

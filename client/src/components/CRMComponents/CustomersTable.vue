@@ -83,22 +83,21 @@ function closeEditSheet(rowId) {
     <TableCaption>Customer Details</TableCaption>
     <TableHeader>
       <TableRow>
-        <TableHead class="w-[100px]"> First Name </TableHead>
-        <TableHead class="w-[100px]"> Last Name </TableHead>
+        <TableHead class="w-[100px]"> Name </TableHead>
         <TableHead class="w-[100px]"> Email</TableHead>
         <TableHead class="w-[100px]"> Phonenumber</TableHead>
-        <TableHead class="w-[100px]"> Role</TableHead>
+        <TableHead class="w-[100px]"> Company Name</TableHead>
+        <TableHead class="w-[100px]"> Address</TableHead>
         <TableHead class="w-[100px]"> Actions</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
       <TableRow v-for="row in data" :id="row.id">
-        <TableCell>{{ row.firstname }}</TableCell>
-        <TableCell>{{ row.lastname }}</TableCell>
+        <TableCell>{{ row.name }}</TableCell>
         <TableCell>{{ row.email }}</TableCell>
-        <TableCell>{{ row.phonenumber }}</TableCell>
-        <TableCell>{{ row.role }}</TableCell>
-        <TableCell>{{ row.KRAPin }}</TableCell>
+        <TableCell>{{ row.phone }}</TableCell>
+        <TableCell>{{ row.companyName }}</TableCell>
+        <TableCell>{{ row.address }}</TableCell>
         <TableCell>
           <Button @click="openEditSheet(row.id)"
             ><div class="flex gap-2">

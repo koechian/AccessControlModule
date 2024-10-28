@@ -5,25 +5,28 @@ import Header from '@/components/CRMComponents/Header.vue';
 import LeadsTable from '@/components/CRMComponents/LeadsTable.vue';
 import SideBar from '@/components/CRMComponents/SideBar.vue';
 import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
 let customerData = ref([]);
 let leadsData = ref([]);
 const selectedTable = ref('customers');
 
 onMounted(() => {
-  //   dataFetcher('customers');
+  dataFetcher('customers');
 });
 function toggleDataFetched(type) {
   selectedTable.value = type;
   dataFetcher(type);
 }
 
+const auth = JSON.parse(sessionStorage.getItem('auth'));
+
 async function dataFetcher(type) {
   // Send off a post request to the getUsers endpoint to get the data
 
   const endpoint =
     type === 'customers'
-      ? 'http://localhost:3000/users/getAllUsers'
+      ? 'http://localhost:3000/customers/getCustomers'
       : 'http://localhost:3000/projects/assigned';
   try {
     const response = await axios.get(endpoint, {
