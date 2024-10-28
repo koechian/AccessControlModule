@@ -1,99 +1,47 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Task 1
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## TLDR: I want to run the application
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Components
 
-## Description
+1. Authentication System
+2. Role Based Access Policy
+3. Two main entities, Projects and Users.
+4. MySQL Database
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 1. Authentication System
 
-## Project setup
+- Authentication was done by username and password in the Auth module.
+- the user submitted a username and password, which were validated against the user data stored in the database
+- Passwords were hashed in the database using an Argon2 Function and a salt, they were verified using the same function
+- On successful Authentication, a JWT was utilised, encoding the users information { role, userid, username } and a secret token stored in the .env file.
+- The JWT was then used to enforce Authorization and Conditional rendering on the backend and frontend respectivley.
+- The JWT token was verified for every request and data access. The token had a fixed life.
+- On logout, the JWT token is added to a persistent data store. Any incoming requests are also checked against this blacklist.
+- On the front end, user tokens are stored in session and are purged on logout, the blacklist exists as a fail safe.
 
-```bash
-$ yarn install
-```
+### 2. RBAC
 
-## Compile and run the project
+- The provided Roles and Policies have been enforced using a combination of Guards and custom @Role decorators.
+- Every endpoint ping is checked for the expected permissions against the expected @Role for the route.
+- On the front end, conditional rendering is utilised to display only data and actions that the associated party can consume
+- If a bad actor was somehow able to access the api endpoints to send data directly to the backend, they would be greeted with a 401 Unauthorized response.
 
-```bash
-# development
-$ yarn run start
+### 3. Entities
 
-# watch mode
-$ yarn run start:dev
+- From the description, active entities narrowed down to Projects and Users. Both schemas for their representation have been outlines in the prisma/schema.prisma file.
+- Data and Object structure validation has also been implemented by using Data Transfer Objects and the standard Validation library to represent expected types and values of any user generated data
 
-# production mode
-$ yarn run start:prod
-```
+### 4. MySQL Database
 
-## Run tests
+- As directed, a MySQL database was used to store data. SQL Statements were further abstratced by use of an ORM, Prisma, to handle the query calls to the database.
+- Data migrations and seeding was done through use of a seeder script and the faker.js Library to provide fake data to flesh out the application.
 
-```bash
-# unit tests
-$ yarn run test
+### Running the application
 
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ yarn install -g mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+1. Navigate to the root directory and install all deps using `yarn install` or `npm`, your call.
+2. Run database migrations using `yarn prisma migrate dev --name init`, this should also seed the database, in case seeding does not happen, run `npx prisma db seed`
+3. (Optional) Run Prisma Studio if you want to have a look at the raw database using `npx prisma studio`
+4. Run the main Nest JS application using `yarn run start:dev`
+5. In another terminal, go to the client directory `cd client` run `yarn install` then `yarn run dev`
+6. Backend should be at `localhost:3000` and frontend at `localhost:5173`

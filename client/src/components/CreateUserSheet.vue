@@ -12,7 +12,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:isOpen', 'userUpdated']);
+const emits = defineEmits(['update:isOpen', 'userCreated']);
 const auth = JSON.parse(sessionStorage.getItem('auth'));
 
 const submitForm = ref({
@@ -68,17 +68,18 @@ async function createUserSubmit() {
       },
     );
 
-    if (response.statusText === 'OK') {
+    if (response.status === 201) {
       toast.success('Employee has been added to the company', {
         position: 'top-left',
       });
-      emit('userUpdated');
+      emits('userCreated');
+
+      // Reset form after successful submission
+      resetForm();
+
+      // Close the sheet after wards
+      emits('update:isOpen', false);
     }
-
-    console.log(userData);
-
-    // Reset form after successful submission
-    resetForm();
   } catch (error) {
     console.error(error);
     toast.error('Error adding Employee', { position: 'top-left' });
@@ -105,12 +106,12 @@ async function createUserSubmit() {
             />
           </div>
           <div class="mt-3 flex flex-col gap-2">
-            <label class="font-medium" for="lastName">Last Name</label>
+            <label class="font-medium" for="lastname">Last Name</label>
             <input
-              v-model="submitForm.lastName"
+              v-model="submitForm.lastname"
               class="border p-2 rounded-md"
               type="text"
-              name="lastName"
+              name="lastname"
               required
             />
           </div>

@@ -69,7 +69,8 @@ function handleUserUpdate() {
       :is="selectedTable === 'users' ? UserDataTable : ProjectsDataTable"
       :data="selectedTable === 'users' ? usersData : projectsData"
       @project-updated="handleProjectsUpdate"
-      @user-updated="handleUserUpdate"
+      @userUpdated="handleUserUpdate"
+      @userCreated="handleUserUpdate"
     />
     <ProjectsDataTable
       v-else

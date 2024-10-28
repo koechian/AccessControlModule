@@ -109,7 +109,8 @@ async function userEditSubmit() {
 
     if (response.statusText === 'OK') {
       toast.success('Employee Updated Successfully', { position: 'top-left' });
-      emit('userUpdated');
+
+      emit('userAdded');
     }
 
     // Reset form after successful submission
@@ -218,7 +219,7 @@ async function userEditSubmit() {
           </div>
           <Button>Apply Changes</Button>
         </form>
-        <AlertDialog v-if="(row.username = !auth.username)">
+        <AlertDialog v-if="row.username != auth.username">
           <AlertDialogTrigger>
             <Button class="mt-20" variant="destructive">
               <div class="flex gap-2">

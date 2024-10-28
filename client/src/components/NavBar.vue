@@ -44,7 +44,9 @@ async function handleLogout(event) {
 </script>
 
 <template>
-  <nav class="w-full h-1/5 p-3 px-10 flex justify-between">
+  <nav
+    class="sticky top-1 bg-white w-full h-1/5 p-3 px-10 flex justify-between"
+  >
     <div class="flex gap-3 items-center">
       <svg
         role="img"

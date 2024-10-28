@@ -83,10 +83,13 @@ export class UsersController {
 
   @Role('Admin')
   @Post('createUser')
-  createUser(@Response() res: any, @Body(ValidationPipe) body: CreateUserDto) {
+  async createUser(
+    @Response() res: any,
+    @Body(ValidationPipe) body: CreateUserDto,
+  ) {
     // Create a user and add them to the database
 
-    const user = this.userService.createUser(body);
+    const user = await this.userService.createUser(body);
     if (!user) {
       throw new HttpException(
         'Error Creating the user',

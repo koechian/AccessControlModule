@@ -34,7 +34,7 @@ export class UsersService {
     });
   }
 
-  //   Creates a new project from the Data Object
+  //   Creates a new user from the Data Object
   async createUser(userDetails: CreateUserDto) {
     try {
       const user = await this.db.user.create({
@@ -42,6 +42,7 @@ export class UsersService {
       });
       return true;
     } catch (e) {
+      console.log(e);
       return false;
     }
   }
