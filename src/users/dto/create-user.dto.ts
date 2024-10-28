@@ -1,6 +1,7 @@
 import {
   IsAlphanumeric,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsPhoneNumber,
 } from 'class-validator';
@@ -13,24 +14,29 @@ enum Role {
 
 export class CreateUserDto {
   @IsNotEmpty()
-  firstname: string;
-  lastname: String;
+  firstName: string;
+  lastName: string;
 
   @IsNotEmpty()
   username: string;
 
   @IsEmail()
-  email: String;
+  email: string;
 
   @IsNotEmpty()
   @IsPhoneNumber('KE')
-  phonenumber: Number;
+  phonenumber: string;
 
-  password: String;
+  @IsNotEmpty()
+  password: string;
 
-  role: Role;
+  @IsNotEmpty()
+  @IsEnum(Role, {
+    message: 'Role must be one of Admin, Engineer or Project Manager',
+  })
+  role: string;
 
   @IsNotEmpty()
   @IsAlphanumeric()
-  kraPin: String;
+  KRAPin: string;
 }

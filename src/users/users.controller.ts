@@ -14,11 +14,11 @@ import {
   Query,
   UseGuards,
   ValidationPipe,
+  Response,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserGuard } from './guards/guards.guard';
-import { permission } from 'process';
 import { RolesGuard } from './guards/roles/roles.guard';
 import { Role } from './guards/roles/roles.decorator';
 
@@ -67,10 +67,9 @@ export class UsersController {
 
   @Role('Admin')
   @Post('createUser')
-  createUser(@Body(ValidationPipe) body: CreateUserDto) {
-    // Create a project and add to the database
+  createUser(@Response() res: any, @Body(ValidationPipe) body: CreateUserDto) {
+    // Create a user and add them to the database
 
-    console.log(body);
     const user = this.userService.createUser(body);
     if (!user) {
       throw new HttpException(
@@ -79,7 +78,7 @@ export class UsersController {
       );
     }
 
-    return user;
+    return res.status(200).json({ message: 'User created' });
   }
 
   @Role('Admin')

@@ -25,7 +25,14 @@ export class UsersService {
 
   //   Creates a new project from the Data Object
   async createUser(userDetails: CreateUserDto) {
-    return 'Created user';
+    try {
+      const user = await this.db.user.create({
+        data: userDetails,
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   //   Updates the defined project

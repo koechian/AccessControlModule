@@ -47,6 +47,9 @@ async function dataFetcher(type) {
 function handleProjectsUpdate() {
   dataFetcher('projects');
 }
+function handleUserUpdate() {
+  dataFetcher('users');
+}
 </script>
 
 <template>
@@ -61,6 +64,7 @@ function handleProjectsUpdate() {
       :is="selectedTable === 'users' ? UserDataTable : ProjectsDataTable"
       :data="selectedTable === 'users' ? usersData : projectsData"
       @project-updated="handleProjectsUpdate"
+      @user-updated="handleUserUpdate"
     />
   </section>
 
