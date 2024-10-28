@@ -21,12 +21,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserGuard } from './guards/guards.guard';
 import { RolesGuard } from './guards/roles/roles.guard';
 import { Role } from './guards/roles/roles.decorator';
+import { ProjectsService } from 'src/projects/projects.service';
 
 type UserLogin = {
   username: string;
   password: string;
 };
-
+type UserDeleteBody = {
+  userid: string;
+};
 type UserUpdateBody = {
   firstname?: string;
   lastname?: string;
@@ -40,7 +43,10 @@ type UserUpdateBody = {
 @UseGuards(RolesGuard)
 @UseGuards(UserGuard)
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private projectsService: ProjectsService,
+  ) {}
 
   @Role('Admin')
   @Role('Project Manager')
@@ -93,10 +99,14 @@ export class UsersController {
   }
 
   @Role('Admin')
-  @Delete('deleteID/:id')
-  deleteUser(@Param() id: Number) {
-    // Create a project and add to the database
-
-    return this.userService.deleteUser(id['id']);
+  @Delete('deleteUser/:userid')
+  async deleteUser(@Response() res: any, @Param() userid: string) {
+    if (await this.userService.deleteUser(userid['userid']))
+      return res.status(200).json({ message: 'User Deleted' });
+    else
+      throw new HttpException(
+        'Error Deleting the user',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
   }
 }

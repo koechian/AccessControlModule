@@ -71,9 +71,9 @@ const updateform = ref({
 
 const emit = defineEmits(['userUpdated']);
 
-async function userDelete(id) {
+async function userDelete(userid) {
   const response = await axios.delete(
-    `http://localhost:3000/users/deleteUser/${id}`,
+    `http://localhost:3000/users/deleteUser/${userid}`,
     {
       headers: {
         Authorization: `Bearer ${auth.accessToken}`,
@@ -218,7 +218,7 @@ async function userEditSubmit() {
           </div>
           <Button>Apply Changes</Button>
         </form>
-        <AlertDialog>
+        <AlertDialog v-if="(row.username = !auth.username)">
           <AlertDialogTrigger>
             <Button class="mt-20" variant="destructive">
               <div class="flex gap-2">

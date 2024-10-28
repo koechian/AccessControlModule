@@ -64,7 +64,46 @@ export class UsersService {
   }
 
   //   Deletes the defined project from the database
-  async deleteUser(id: Number) {
-    return `User ${id} deleted`;
+  async deleteUser(user_id: number) {
+    try {
+      // Ensure the user exists before attempting deletion
+      const user = await this.db.user.findUnique({
+        where: { id: Number(user_id) },
+      });
+
+      if (!user) {
+        console.log('User does not exist');
+        return false;
+      }
+
+      // Get the projectDetails of any related Projects
+      const projects = await this.db.projectUserLink.findMany({
+        where: {
+          userID: user.userid,
+        },
+        select: {
+          projectID: true,
+        },
+      });
+
+      // Delete any assigned projects from the database
+      await this.db.projectUserLink.deleteMany({
+        where: {
+          user: {
+            userid: user.userid,
+          },
+        },
+      });
+
+      // Safely delete the user
+      await this.db.user.delete({
+        where: { id: Number(user_id) },
+      });
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
   }
 }
