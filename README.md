@@ -1,4 +1,4 @@
-# Task 1
+# An overview of both the tasks
 
 ## TLDR: [I want to run the application](#running-the-application)
 
@@ -6,8 +6,9 @@
 
 1. Authentication System
 2. Role Based Access Policy
-3. Two main entities, Projects and Users.
-4. MySQL Database
+3. Two main entities, Projects and Users. (Task 1)
+4.
+5. MySQL Database
 
 ### 1. Authentication System
 
@@ -34,10 +35,11 @@
 
 ### 4. MySQL Database
 
-- As directed, a MySQL database was used to store data. SQL Statements were further abstratced by use of an ORM, Prisma, to handle the query calls to the database.
+- As directed, a MySQL database in the form of a SQLite file was used to store data. SQL Statements were further abstratced by use of an ORM, Prisma, to handle the query calls to the database.
 - Data migrations and seeding was done through use of a seeder script and the faker.js Library to provide fake data to flesh out the application.
+- Later on, models for CRM platform were added, the Customers,
 
-### Running the application ⚡️
+### Running the application(s) ⚡️
 
 1. Navigate to the root directory and install all deps using `yarn install` or `npm`, your call.
 2. Run database migrations using `yarn prisma migrate dev --name init`, this should also seed the database, in case seeding does not happen, run `npx prisma db seed`
@@ -45,3 +47,23 @@
 4. Run the main Nest JS application using `yarn run start:dev`
 5. In another terminal, go to the client directory `cd client` run `yarn install` then `yarn run dev`
 6. Backend should be at `localhost:3000` and frontend at `localhost:5173`
+7. The CRM and RBAC FrontEnds are hosted in the same client directory, so you can run both at the same time.
+8. You can grab a random username and password from the database (`npx prisma studio`) or use these ones:
+9. You can switch to the CRM platform in the User Profile in the NavBar or from the login page.
+
+```
+Admin  =>{
+        username: Halie_Tromp
+        password: password
+}
+
+Project Manager => {
+        username: Halie_Tromp
+        password: password
+}
+
+Engineer =>{
+         username: Nova59
+        password: password
+}
+```
