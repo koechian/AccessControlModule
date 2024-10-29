@@ -7,6 +7,7 @@ import {
   PhHouse,
   PhPaperPlaneTilt,
   PhUsers,
+  PhBroadcast,
 } from '@phosphor-icons/vue';
 import { ref } from 'vue';
 
@@ -14,7 +15,7 @@ const auth = JSON.parse(sessionStorage.getItem('auth'));
 const username = ref(auth.username);
 </script>
 <template>
-  <div class="flex flex-col justify-between h-[90vh]">
+  <div class="flex flex-col justify-between h-[90vh] border-r px-1">
     <div class="flex place-items-center gap-4">
       <svg
         class="w-16"
@@ -32,22 +33,25 @@ const username = ref(auth.username);
     </div>
     <div>
       <div
-        class="flex place-items-center font-medium font-lg gap-3 p-3 hover:bg-purple-200 rounded-lg hover:cursor-pointer transition"
-      >
-        <PhHouse size="24" />
-        Home
-      </div>
-      <div
+        @click="$emit('switchTab', 'customers')"
         class="flex place-items-center font-medium font-lg gap-3 p-3 hover:bg-purple-200 rounded-lg hover:cursor-pointer transition"
       >
         <PhUsers size="24" />
         Customers
       </div>
       <div
+        @click="$emit('switchTab', 'leads')"
         class="flex place-items-center font-medium font-lg gap-3 p-3 hover:bg-purple-200 rounded-lg hover:cursor-pointer transition"
       >
         <PhPaperPlaneTilt size="24" />
         Leads
+      </div>
+      <div
+        @click="$emit('switchTab', 'interactions')"
+        class="flex place-items-center font-medium font-lg gap-3 p-3 hover:bg-purple-200 rounded-lg hover:cursor-pointer transition"
+      >
+        <PhBroadcast size="24" />
+        Interactions
       </div>
     </div>
     <div>

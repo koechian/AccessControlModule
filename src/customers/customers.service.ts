@@ -46,12 +46,23 @@ export class CustomersService {
     });
   }
 
-  async createCustomer(userDetails: CreateCustomerDto) {
+  async createCustomer(customerDetails: CreateCustomerDto) {
     try {
       const user = await this.db.customer.create({
-        data: userDetails,
+        data: customerDetails,
       });
       return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
+
+  // returns the number of customers
+  async countCustomer() {
+    try {
+      console.log('pinged');
+      return await this.db.customer.count();
     } catch (e) {
       console.log(e);
       return false;

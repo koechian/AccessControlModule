@@ -64,6 +64,19 @@ export class CustomerController {
     );
   }
 
+  // return customers count
+  @Get('customersCount')
+  async getCustomersCount(@Response() res: any) {
+    const result = await this.customerService.countCustomer();
+
+    if (result) return res.status(201).json(result);
+    else
+      throw new HttpException(
+        'Error Deleting the customer',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+  }
+
   // Delete a customer
   @Delete('deleteCustomer/:id')
   async deleteUser(@Response() res: any, @Param() id: string) {
