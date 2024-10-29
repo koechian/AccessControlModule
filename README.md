@@ -1,6 +1,6 @@
 # Task 1
 
-## TLDR: I want to run the application
+## TLDR: [I want to run the application](#running-the-application)
 
 ## Components
 
