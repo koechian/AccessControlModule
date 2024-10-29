@@ -98,7 +98,8 @@ async function metricsOverview() {
   const endpoints = {
     leadsCount: 'http://localhost:3000/leads/getLeadsCount',
     convertedLeadsCount: 'http://localhost:3000/leads/getConvertedLeadsCount',
-    // customersCount: 'http://localhost:3000/customers/customerCount',
+    interactionsCount:
+      'http://localhost:3000/interactions/getInteractionsCount',
   };
 
   for (const endpoint in endpoints) {
@@ -160,6 +161,7 @@ function handleLeadUpdate() {
       <Cards
         :leadsConverted="metrics['convertedLeadsCount']"
         :activeLeads="metrics['leadsCount']"
+        :interactionsCount="metrics['interactionsCount']"
       />
 
       <component

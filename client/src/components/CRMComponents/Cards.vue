@@ -4,7 +4,7 @@ defineProps({
     type: Number,
     default: 0,
   },
-  totalCustomers: {
+  interactionsCount: {
     type: Number,
     default: 0,
   },
@@ -19,8 +19,8 @@ defineProps({
     <div
       class="border rounded-lg p-7 flex flex-col aspect-video gap-4 min-w-80"
     >
-      <h3 class="text-2xl">Total Customers</h3>
-      <span class="text-4xl">{{ totalCustomers }}</span>
+      <h3 class="text-2xl">Interactions</h3>
+      <span class="text-4xl">{{ interactionsCount }}</span>
     </div>
     <div
       class="border rounded-lg p-7 flex flex-col min-w-80 aspect-video gap-4"
