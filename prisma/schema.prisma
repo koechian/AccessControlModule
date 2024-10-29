@@ -101,6 +101,7 @@ model Interaction {
   createdAt DateTime @default(now())
   lead      Lead     @relation(fields: [leadId], references: [id])
 
+
   Customer Customer[]
 }
 

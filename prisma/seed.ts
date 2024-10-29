@@ -147,7 +147,14 @@ export async function createFakeLead(customerId: number) {
 }
 
 export async function createFakeInteraction(leadId: number) {
-  const types = ['PHONE_CALL', 'EMAIL', 'MEETING', 'OTHER'];
+  const types = [
+    'PHONE_CALL',
+    'EMAIL',
+    'IN_PERSON_MEETING',
+    'OTHER',
+    'WHATS_APP',
+    'INSTAGRAM',
+  ];
   const type = faker.helpers.arrayElement(types);
   const details = faker.lorem.sentence();
 
@@ -186,15 +193,15 @@ async function main() {
   console.log('10 Project Managers created.');
 
   // Create 15 Projects
-  const projects = Array.from({ length: 5 }).map(() => createFakeProject());
+  const projects = Array.from({ length: 15 }).map(() => createFakeProject());
   await Promise.all(projects);
   console.log('5 Projects created.');
 
-  // Create 5 Customers, each with multiple leads and interactions
+  // Create 25 Customers, each with multiple leads and interactions
   const customers = await Promise.all(
-    Array.from({ length: 5 }).map(() => createFakeCustomer()),
+    Array.from({ length: 25 }).map(() => createFakeCustomer()),
   );
-  console.log('5 Customers created.');
+  console.log('25 Customers created.');
 
   for (const customer of customers) {
     // Create 3 leads per customer
