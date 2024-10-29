@@ -37,7 +37,7 @@
 - As directed, a MySQL database was used to store data. SQL Statements were further abstratced by use of an ORM, Prisma, to handle the query calls to the database.
 - Data migrations and seeding was done through use of a seeder script and the faker.js Library to provide fake data to flesh out the application.
 
-### Running the application
+### Running the application ⚡️
 
 1. Navigate to the root directory and install all deps using `yarn install` or `npm`, your call.
 2. Run database migrations using `yarn prisma migrate dev --name init`, this should also seed the database, in case seeding does not happen, run `npx prisma db seed`
