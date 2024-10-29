@@ -26,7 +26,7 @@ export class LeadController {
 
   // Get all leads (with optional search and filter parameters)
   @Get('getLeads')
-  async getAllLeads(@Response() res: any, @Query() query: LeadQueryDto) {
+  async getAllLeads(@Response() res: any) {
     const result = await this.LeadsService.getAllLeads();
 
     if (result) {
@@ -74,16 +74,13 @@ export class LeadController {
     }
   }
 
-  // Get a single lead by ID
-  @Get(':id')
-  getLeadById(@Param('id') id: string) {
-    /* ... */
-  }
-
   // Update lead details, such as status
-  @Put(':id')
-  updateLead(@Param('id') id: string, @Body() updateLeadDto: UpdateLeadDto) {
-    /* ... */
+  @Put('updateLead')
+  async updateLead(@Response() res: any, @Body() updateLeadDto: UpdateLeadDto) {
+    console.log('Pinged');
+    if (await this.LeadsService.updateLead(updateLeadDto))
+      return res.status(201);
+    throw new HttpException('Error updating lead', HttpStatus.NOT_FOUND);
   }
 
   // Delete a lead

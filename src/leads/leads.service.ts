@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LeadQueryDto } from './DTOs/LeadQuery.dto';
+import { UpdateLeadDto } from './DTOs/UpdateLead.dto';
 
 @Injectable()
 export class LeadsService {
@@ -84,6 +85,19 @@ export class LeadsService {
       console.log('Data: ', data);
 
       return data;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
+
+  async updateLead(body: UpdateLeadDto) {
+    try {
+      const result = await this.db.lead.update({
+        where: { id: body.id },
+        data: { status: body.status },
+      });
+      return result;
     } catch (e) {
       console.log(e);
       return false;

@@ -9,7 +9,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import { PhPencilSimple, PhFunnelSimple, PhX } from '@phosphor-icons/vue';
+import {
+  PhPencilSimple,
+  PhFunnelSimple,
+  PhX,
+  PhFilePlus,
+} from '@phosphor-icons/vue';
 
 import { ref, watchEffect } from 'vue';
 import { Toaster } from 'vue-sonner';
@@ -22,6 +27,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import EditLeadSheet from './EditLeadSheet.vue';
 import Badge from '../ui/badge/Badge.vue';
+import NewInteraction from './NewInteraction.vue';
 
 const props = defineProps({
   data: {
@@ -40,6 +46,7 @@ const activeFilters = ref({
 const emit = defineEmits(['leadsUpdated', 'searchQueryUpdated']); // Emit search query
 
 const editStates = ref({});
+const newLeadStates = ref({});
 const searchQuery = ref('');
 
 function childEmiter() {
@@ -48,6 +55,13 @@ function childEmiter() {
 
 function openEditSheet(rowId) {
   editStates.value[rowId] = true;
+}
+function openInteractionSheet(rowId) {
+  newLeadStates.value[rowId] = true;
+}
+
+function closeInteractionSheet(rowId) {
+  newLeadStates.value[rowId] = false;
 }
 
 function closeEditSheet(rowId) {
@@ -209,19 +223,35 @@ watchEffect(() => {
           <TableCell>{{ row.customer.companyName }}</TableCell>
           <TableCell>{{ row.customer.phone }}</TableCell>
           <TableCell>
-            <Button @click="openEditSheet(row.id)"
-              ><div class="flex gap-2">
-                <PhPencilSimple size="20" color="#ffff" />
-                Edit
-              </div>
-            </Button>
+            <div class="flex-col gap-2 flex">
+              <Button @click="openEditSheet(row.id)"
+                ><div class="flex gap-2">
+                  <PhPencilSimple size="20" color="#ffff" />
+                  Edit
+                </div>
+              </Button>
 
-            <EditLeadSheet
+              <Button @click="openInteractionSheet(row.id)"
+                ><div class="flex gap-2">
+                  <PhFilePlus size="20" color="#ffff" />
+                  New Interaction
+                </div>
+              </Button>
+            </div>
+            <!-- <EditLeadSheet
               :isOpen="editStates[row.id] || false"
               :row="row"
               :id="row.id"
               @leads-updated="childEmiter"
               @update:isOpen="closeEditSheet(row.id)"
+            /> -->
+
+            <NewInteraction
+              :isOpen="newLeadStates[row.id] || false"
+              :leadId="row.id"
+              :id="row.id"
+              @interaction-created="childEmiter"
+              @createInteraction:isOpen="closeInteractionSheet(row.id)"
             />
           </TableCell>
         </TableRow>
