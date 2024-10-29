@@ -66,7 +66,7 @@ export class LeadsService {
           },
         },
         where: {
-          status: query.status ? query.status : undefined,
+          status: query.status ? { contains: query.status } : undefined,
           customer: {
             name: query.customerName
               ? { contains: query.customerName }

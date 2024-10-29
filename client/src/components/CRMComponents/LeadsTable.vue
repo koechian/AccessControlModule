@@ -40,7 +40,7 @@ const activeFilters = ref({
 const emit = defineEmits(['leadsUpdated', 'searchQueryUpdated']); // Emit search query
 
 const editStates = ref({});
-const searchQuery = ref(''); // Track search input
+const searchQuery = ref('');
 
 function childEmiter() {
   emit('leadsUpdated');

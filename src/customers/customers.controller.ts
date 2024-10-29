@@ -41,12 +41,6 @@ export class CustomerController {
     return await this.customerService.getAll(query);
   }
 
-  // Get a single customer by ID
-  @Get(':id')
-  getCustomerById(@Param('id') id: string) {
-    /* ... */
-  }
-
   // Update customer details
   @Put('updateCustomer/:id')
   async updateCustomer(

@@ -9,8 +9,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import { ref } from 'vue';
-import { PhPencilSimple, PhFunnelSimple } from '@phosphor-icons/vue';
+import { ref, watchEffect } from 'vue';
+
+import { PhPencilSimple, PhFunnelSimple, PhX } from '@phosphor-icons/vue';
+import Badge from '../ui/badge/Badge.vue';
 import { Toaster } from 'vue-sonner';
 import { Button } from '../ui/button';
 import {
@@ -30,7 +32,15 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['customerUpdated']);
+const emit = defineEmits(['customerUpdated', 'searchQueryUpdated']);
+
+const searchQuery = ref('');
+
+const activeFilters = ref({
+  customerName: false,
+  email: false,
+  companyName: false,
+});
 
 function childEmiter() {
   emit('customerUpdated');
@@ -45,18 +55,86 @@ function openEditSheet(rowId) {
 function closeEditSheet(rowId) {
   editStates.value[rowId] = false;
 }
+
+function toggleActiveFilters(filter) {
+  activeFilters.value[filter] = !activeFilters.value[filter];
+}
+
+watchEffect(() => {
+  const queryParts = [];
+
+  if (activeFilters.value.leadStatus && searchQuery.value) {
+    queryParts.push(`status=${searchQuery.value}`);
+  }
+  if (activeFilters.value.customerName && searchQuery.value) {
+    queryParts.push(`customerName=${searchQuery.value}`);
+  }
+  if (activeFilters.value.customerEmail && searchQuery.value) {
+    queryParts.push(`email=${searchQuery.value}`);
+  }
+  if (activeFilters.value.companyName && searchQuery.value) {
+    queryParts.push(`companyName=${searchQuery.value}`);
+  }
+
+  const queryString = queryParts.join('&');
+  emit('searchQueryUpdated', queryString);
+});
 </script>
 
 <template>
   <div>
     <h4 class="mb-5 text-xl font-semibold">Customer Information</h4>
   </div>
-  <div class="flex place-items-center justify-end gap-5">
+  <div class="flex place-items-center justify-end gap-5 mb-5">
     <input
-      class="border p-3 rounded-lg min-w-16"
+      v-model="searchQuery"
+      class="border p-3 rounded-lg"
       placeholder="Search box"
       type="text"
     />
+    <Badge
+      @click="
+        () => {
+          toggleActiveFilters('email');
+        }
+      "
+      v-if="activeFilters['email']"
+      class="p-2 font-normal text-sm bg-blue-500 hover:bg-blue-300"
+    >
+      <div class="flex place-items-center gap-2 mr-2">
+        <PhX />
+        Email
+      </div>
+    </Badge>
+
+    <Badge
+      @click="
+        () => {
+          toggleActiveFilters('companyName');
+        }
+      "
+      v-if="activeFilters['companyName']"
+      class="p-2 font-normal text-sm bg-blue-500 hover:bg-blue-300"
+    >
+      <div class="flex place-items-center gap-2 mr-2">
+        <PhX />
+        Company Name
+      </div>
+    </Badge>
+    <Badge
+      @click="
+        () => {
+          toggleActiveFilters('customerName');
+        }
+      "
+      v-if="activeFilters['customerName']"
+      class="p-2 font-bg-blue-500 hover:bg-blue-300 bg-blue-500"
+    >
+      <div class="flex place-items-center gap-2 mr-2">
+        <PhX />
+        Customer Name
+      </div>
+    </Badge>
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Button>
@@ -67,8 +145,24 @@ function closeEditSheet(rowId) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel> Company Name </DropdownMenuLabel>
-        <DropdownMenuLabel> Email </DropdownMenuLabel>
+        <DropdownMenuLabel
+          class="p-2 hover:cursor-pointer hover:bg-blue-500 hover:text-white"
+          @click="toggleActiveFilters('companyName')"
+        >
+          Company Name
+        </DropdownMenuLabel>
+        <DropdownMenuLabel
+          class="p-2 hover:cursor-pointer hover:bg-blue-500 hover:text-white"
+          @click="toggleActiveFilters('email')"
+        >
+          Email
+        </DropdownMenuLabel>
+        <DropdownMenuLabel
+          class="p-2 hover:cursor-pointer hover:bg-blue-500 hover:text-white"
+          @click="toggleActiveFilters('customerName')"
+        >
+          Customer Name
+        </DropdownMenuLabel>
       </DropdownMenuContent>
     </DropdownMenu>
   </div>

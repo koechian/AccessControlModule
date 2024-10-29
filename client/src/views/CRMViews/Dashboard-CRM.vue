@@ -22,7 +22,7 @@ function toggleDataFetched(type) {
   dataFetcher(type);
 }
 
-async function handleSearchQueryUpdated(query) {
+async function handleLeadsSearchQueryUpdated(query) {
   if (query != '') {
     try {
       const response = await axios.get(
@@ -39,6 +39,30 @@ async function handleSearchQueryUpdated(query) {
     } catch (e) {
       console.log(e);
     }
+  } else {
+    dataFetcher('leads');
+  }
+}
+
+async function handleCustomersSearchQueryUpdated(query) {
+  if (query != '') {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/customers/getCustomers?${query}`,
+        {
+          headers: {
+            Authorization: `Bearer ${auth.accessToken}`,
+          },
+        },
+      );
+
+      leadsData.value = response.data;
+      // console.log(`http://localhost:3000/customers/getCustomers?${query}`);
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    dataFetcher('customers');
   }
 }
 
@@ -113,6 +137,7 @@ function handleLeadUpdate() {
         :is="CustomersTable"
         :data="customerData"
         @customer-updated="handleCustomerUpdate"
+        @search-query-updated="handleCustomersSearchQueryUpdated"
       />
 
       <component
@@ -120,7 +145,7 @@ function handleLeadUpdate() {
         :is="LeadsTable"
         :data="leadsData"
         @leads-updated="handleLeadUpdate"
-        @search-query-updated="handleSearchQueryUpdated"
+        @search-query-updated="handleLeadsSearchQueryUpdated"
       />
     </div>
   </div>

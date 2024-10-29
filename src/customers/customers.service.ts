@@ -23,13 +23,13 @@ export class CustomersService {
     const filterConditions = {
       where: {
         ...(query.name && {
-          name: { contains: query.name, mode: 'insensitive' },
+          name: { contains: query.name },
         }),
         ...(query.email && {
-          email: { contains: query.email, mode: 'insensitive' },
+          email: { contains: query.email },
         }),
         ...(query.companyName && {
-          companyName: { contains: query.companyName, mode: 'insensitive' },
+          companyName: { contains: query.companyName },
         }),
       },
     };
