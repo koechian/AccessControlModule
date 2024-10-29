@@ -7,9 +7,11 @@ import SideBar from '@/components/CRMComponents/SideBar.vue';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { Toaster } from 'vue-sonner';
+import InteractionsTable from '@/components/CRMComponents/InteractionsTable.vue';
 
 let customerData = ref([]);
 let leadsData = ref([]);
+let interactionsData = ref({});
 let metrics = ref({});
 const selectedTable = ref('customers');
 
@@ -66,6 +68,30 @@ async function handleCustomersSearchQueryUpdated(query) {
   }
 }
 
+async function handleInteractionsSearchQueryUpdated(query) {
+  if (query != '') {
+    try {
+      // const response = await axios.get(
+      //   `http://localhost:3000/interactions/queryInteractions?${query}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${auth.accessToken}`,
+      //     },
+      //   },
+      // );
+
+      // leadsData.value = response.data;
+      console.log(
+        `http://localhost:3000/interactions/queryInteractions?${query}`,
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    dataFetcher('interactions');
+  }
+}
+
 const auth = JSON.parse(sessionStorage.getItem('auth'));
 
 async function metricsOverview() {
@@ -88,7 +114,9 @@ async function dataFetcher(type) {
   const endpoint =
     type === 'customers'
       ? 'http://localhost:3000/customers/getCustomers'
-      : 'http://localhost:3000/leads/getLeads';
+      : type == 'leads'
+        ? 'http://localhost:3000/leads/getLeads'
+        : 'http://localhost:3000/interactions/getInteractions';
   try {
     const response = await axios.get(endpoint, {
       headers: {
@@ -98,8 +126,10 @@ async function dataFetcher(type) {
     });
     if (type === 'customers') {
       customerData.value = response.data;
-    } else {
+    } else if (type == 'leads') {
       leadsData.value = response.data;
+    } else {
+      interactionsData.value = response.data;
     }
   } catch (e) {
     console.log(e);
@@ -146,6 +176,13 @@ function handleLeadUpdate() {
         :data="leadsData"
         @leads-updated="handleLeadUpdate"
         @search-query-updated="handleLeadsSearchQueryUpdated"
+      />
+
+      <component
+        v-else-if="selectedTable === 'interactions'"
+        :is="InteractionsTable"
+        :data="interactionsData"
+        @search-query-updated="handleInteractionsSearchQueryUpdated"
       />
     </div>
   </div>
