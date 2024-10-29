@@ -6,6 +6,10 @@ import { ref } from 'vue';
 
 const emit = defineEmits(['customerCreated']);
 
+function childEmiter() {
+  emit('customerCreated');
+}
+
 const isOpen = ref(false);
 
 function openSheet() {

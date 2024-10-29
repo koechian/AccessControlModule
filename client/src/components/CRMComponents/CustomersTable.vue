@@ -10,14 +10,9 @@ import {
 } from '@/components/ui/table';
 
 import { ref } from 'vue';
-import {
-  PhPencilSimple,
-  PhFilePlus,
-  PhFunnelSimple,
-} from '@phosphor-icons/vue';
+import { PhPencilSimple, PhFunnelSimple } from '@phosphor-icons/vue';
 import { Toaster } from 'vue-sonner';
 import { Button } from '../ui/button';
-import EditUserSheet from '../EditUserSheet.vue';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,10 +30,10 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['userUpdated']);
+const emit = defineEmits(['customerUpdated']);
 
 function childEmiter() {
-  emit('userUpdated');
+  emit('customerUpdated');
 }
 
 const editStates = ref({});
@@ -80,41 +75,43 @@ function closeEditSheet(rowId) {
 
   <Toaster></Toaster>
 
-  <Table>
-    <TableCaption>Customer Details</TableCaption>
-    <TableHeader>
-      <TableRow>
-        <TableHead class="w-[100px]"> Name </TableHead>
-        <TableHead class="w-[100px]"> Email</TableHead>
-        <TableHead class="w-[100px]"> Phonenumber</TableHead>
-        <TableHead class="w-[100px]"> Company Name</TableHead>
-        <TableHead class="w-[100px]"> Address</TableHead>
-        <TableHead class="w-[100px]"> Actions</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      <TableRow v-for="row in data" :id="row.id">
-        <TableCell>{{ row.name }}</TableCell>
-        <TableCell>{{ row.email }}</TableCell>
-        <TableCell>{{ row.phone }}</TableCell>
-        <TableCell>{{ row.companyName }}</TableCell>
-        <TableCell>{{ row.address }}</TableCell>
-        <TableCell>
-          <Button @click="openEditSheet(row.id)"
-            ><div class="flex gap-2">
-              <PhPencilSimple size="20" color="#ffff" />
-              Edit
-            </div>
-          </Button>
-          <EditCustomerSheet
-            :isOpen="editStates[row.id] || false"
-            :row="row"
-            :id="row.id"
-            @customerAdded="childEmiter"
-            @update:isOpen="closeEditSheet(row.id)"
-          />
-        </TableCell>
-      </TableRow>
-    </TableBody>
-  </Table>
+  <div class="relative h-[60vh] overflow-auto">
+    <Table>
+      <TableCaption>Customer Details</TableCaption>
+      <TableHeader class="sticky top-0 bg-white">
+        <TableRow>
+          <TableHead class="w-[100px]"> Name </TableHead>
+          <TableHead class="w-[100px]"> Email</TableHead>
+          <TableHead class="w-[100px]"> Phonenumber</TableHead>
+          <TableHead class="w-[100px]"> Company Name</TableHead>
+          <TableHead class="w-[100px]"> Address</TableHead>
+          <TableHead class="w-[100px]"> Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow v-for="row in data" :id="row.id">
+          <TableCell>{{ row.name }}</TableCell>
+          <TableCell>{{ row.email }}</TableCell>
+          <TableCell>{{ row.phone }}</TableCell>
+          <TableCell>{{ row.companyName }}</TableCell>
+          <TableCell>{{ row.address }}</TableCell>
+          <TableCell>
+            <Button @click="openEditSheet(row.id)"
+              ><div class="flex gap-2">
+                <PhPencilSimple size="20" color="#ffff" />
+                Edit
+              </div>
+            </Button>
+            <EditCustomerSheet
+              :isOpen="editStates[row.id] || false"
+              :row="row"
+              :id="row.id"
+              @customerAdded="childEmiter"
+              @update:isOpen="closeEditSheet(row.id)"
+            />
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </div>
 </template>

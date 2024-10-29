@@ -11,7 +11,7 @@ import {
 
 import { PhPencilSimple, PhFunnelSimple, PhX } from '@phosphor-icons/vue';
 
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { Toaster } from 'vue-sonner';
 import { Button } from '../ui/button';
 import {
@@ -23,8 +23,6 @@ import {
 import EditLeadSheet from './EditLeadSheet.vue';
 import Badge from '../ui/badge/Badge.vue';
 
-const auth = JSON.parse(sessionStorage.getItem('auth'));
-
 const props = defineProps({
   data: {
     type: Array,
@@ -32,13 +30,21 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['leadsUpdated']);
+const activeFilters = ref({
+  customerName: false,
+  leadStatus: false,
+  customerEmail: false,
+  companyName: false,
+});
+
+const emit = defineEmits(['leadsUpdated', 'searchQueryUpdated']); // Emit search query
+
+const editStates = ref({});
+const searchQuery = ref(''); // Track search input
 
 function childEmiter() {
   emit('leadsUpdated');
 }
-
-const editStates = ref({});
 
 function openEditSheet(rowId) {
   editStates.value[rowId] = true;
@@ -50,17 +56,27 @@ function closeEditSheet(rowId) {
 
 function toggleActiveFilters(filter) {
   activeFilters.value[filter] = !activeFilters.value[filter];
-
-  console.log(activeFilters.value);
 }
 
-function queryBuilder() {}
+watchEffect(() => {
+  const queryParts = [];
 
-const activeFilters = ref({
-  customerName: true,
-  leadStatus: false,
-  customerEmail: false,
-  companyName: false,
+  if (activeFilters.value.leadStatus && searchQuery.value) {
+    queryParts.push(`status=${searchQuery.value}`);
+  }
+  if (activeFilters.value.customerName && searchQuery.value) {
+    queryParts.push(`customerName=${searchQuery.value}`);
+  }
+  if (activeFilters.value.customerEmail && searchQuery.value) {
+    queryParts.push(`customerEmail=${searchQuery.value}`);
+  }
+  if (activeFilters.value.companyName && searchQuery.value) {
+    queryParts.push(`companyName=${searchQuery.value}`);
+  }
+
+  const queryString = queryParts.join('&');
+  // console.log(queryString);
+  emit('searchQueryUpdated', queryString); // Emit the updated query string to the parent
 });
 </script>
 
@@ -69,7 +85,12 @@ const activeFilters = ref({
     <h4 class="mb-5 text-xl font-semibold">Leads Information</h4>
   </div>
   <div class="flex place-items-center justify-end gap-5 mb-5">
-    <input class="border p-3 rounded-lg" placeholder="Search box" type="text" />
+    <input
+      v-model="searchQuery"
+      class="border p-3 rounded-lg"
+      placeholder="Search box"
+      type="text"
+    />
     <Badge
       @click="
         () => {

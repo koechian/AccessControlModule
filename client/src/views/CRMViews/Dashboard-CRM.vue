@@ -22,13 +22,33 @@ function toggleDataFetched(type) {
   dataFetcher(type);
 }
 
+async function handleSearchQueryUpdated(query) {
+  if (query != '') {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/leads/queryLeads?${query}`,
+        {
+          headers: {
+            Authorization: `Bearer ${auth.accessToken}`,
+          },
+        },
+      );
+
+      leadsData.value = response.data;
+      // console.log(`http://localhost:3000/leads/queryLeads?${query}`);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 const auth = JSON.parse(sessionStorage.getItem('auth'));
 
 async function metricsOverview() {
   const endpoints = {
     leadsCount: 'http://localhost:3000/leads/getLeadsCount',
     convertedLeadsCount: 'http://localhost:3000/leads/getConvertedLeadsCount',
-    customersCount: 'http://localhost:3000/customers/customerCount',
+    // customersCount: 'http://localhost:3000/customers/customerCount',
   };
 
   for (const endpoint in endpoints) {
@@ -36,8 +56,6 @@ async function metricsOverview() {
 
     metrics.value[endpoint] = result.data;
   }
-
-  console.log(metrics.value);
 }
 
 async function dataFetcher(type) {
@@ -87,14 +105,22 @@ function handleLeadUpdate() {
       <Header @customer-created="handleCustomerUpdate" />
       <Cards
         :leadsConverted="metrics['convertedLeadsCount']"
-        :totalCustomers="metrics['customersCount']"
         :activeLeads="metrics['leadsCount']"
       />
+
       <component
-        :is="selectedTable === 'customers' ? CustomersTable : LeadsTable"
-        :data="selectedTable === 'customers' ? customerData : leadsData"
-        @leads-updated="handleLeadUpdate"
+        v-if="selectedTable === 'customers'"
+        :is="CustomersTable"
+        :data="customerData"
         @customer-updated="handleCustomerUpdate"
+      />
+
+      <component
+        v-else-if="selectedTable === 'leads'"
+        :is="LeadsTable"
+        :data="leadsData"
+        @leads-updated="handleLeadUpdate"
+        @search-query-updated="handleSearchQueryUpdated"
       />
     </div>
   </div>
