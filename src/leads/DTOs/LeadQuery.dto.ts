@@ -7,5 +7,12 @@ export class LeadQueryDto {
 
   @IsOptional()
   @IsString()
-  companyName?: string; // Can be used to filter by customer’s company name
+  companyName?: string;
+
+  @IsOptional()
+  @IsString()
+  customerName?: string;
+  @IsOptional()
+  @IsString()
+  customerEmail?: string;
 }
