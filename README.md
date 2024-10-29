@@ -7,7 +7,7 @@
 1. Authentication System
 2. Role Based Access Policy
 3. Two main entities, Projects and Users. (Task 1)
-4.
+4. Sorting and Filtering on the CRM
 5. MySQL Database
 
 ### 1. Authentication System
@@ -39,7 +39,8 @@
 - Data migrations and seeding was done through use of a seeder script and the faker.js Library to provide fake data to flesh out the application.
 - Later on, models for CRM platform were added, the Customers,
 
-### Running the application(s) ⚡️
+### Running the application 
+⚡
 
 1. Navigate to the root directory and install all deps using `yarn install` or `npm`, your call.
 2. Run database migrations using `yarn prisma migrate dev --name init`, this should also seed the database, in case seeding does not happen, run `npx prisma db seed`
