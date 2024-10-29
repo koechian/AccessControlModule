@@ -10,9 +10,36 @@ import {
   PhBroadcast,
 } from '@phosphor-icons/vue';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const auth = JSON.parse(sessionStorage.getItem('auth'));
 const username = ref(auth.username);
+const router = useRouter();
+
+async function handleLogout(event) {
+  event.preventDefault();
+
+  try {
+    // Delete Session Information
+    sessionStorage.clear();
+
+    // Send logout Request to server
+    const response = await axios.post(
+      'http://localhost:3000/auth/logout',
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${auth.accessToken}`,
+        },
+      },
+    );
+    // Navigate to Login Page
+    router.push('/');
+  } catch (error) {
+    console.log(error);
+  }
+}
 </script>
 <template>
   <div class="flex flex-col justify-between h-[90vh] border-r px-1">
