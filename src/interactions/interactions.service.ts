@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateInteractionDto } from './DTOs/CreateInteraction.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { contains } from 'class-validator';
 
 @Injectable()
 export class InteractionsService {
@@ -40,26 +41,43 @@ export class InteractionsService {
     }
   }
 
+  async totalInteractions() {
+    try {
+      const totalInteractions = await this.db.interaction.count();
+      return totalInteractions;
+    } catch (error) {
+      console.error('Error fetching total interactions:', error);
+      throw new Error('Could not retrieve total interactions');
+    }
+  }
+
   async queryInteractions(
     filters: {
       leadStatus?: string;
       customerName?: string;
       interactionType?: string;
-      startDate?: Date;
-      endDate?: Date;
+      companyName?: string;
+      customerEmail?: string;
     } = {},
   ) {
-    const { leadStatus, customerName, interactionType, startDate, endDate } =
-      filters;
+    const {
+      leadStatus,
+      customerName,
+      interactionType,
+      companyName,
+      customerEmail,
+    } = filters;
 
     try {
       const interactions = await this.db.interaction.findMany({
         where: {
-          type: interactionType,
+          type: interactionType ? { contains: interactionType } : undefined,
           lead: {
-            status: leadStatus,
+            status: leadStatus ? { contains: leadStatus } : undefined,
             customer: {
-              name: customerName,
+              name: customerName ? { contains: customerName } : undefined,
+              email: customerEmail ? { contains: customerEmail } : undefined,
+              companyName: companyName ? { contains: companyName } : undefined,
             },
           },
         },

@@ -71,19 +71,16 @@ async function handleCustomersSearchQueryUpdated(query) {
 async function handleInteractionsSearchQueryUpdated(query) {
   if (query != '') {
     try {
-      // const response = await axios.get(
-      //   `http://localhost:3000/interactions/queryInteractions?${query}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${auth.accessToken}`,
-      //     },
-      //   },
-      // );
-
-      // leadsData.value = response.data;
-      console.log(
+      const response = await axios.get(
         `http://localhost:3000/interactions/queryInteractions?${query}`,
+        {
+          headers: {
+            Authorization: `Bearer ${auth.accessToken}`,
+          },
+        },
       );
+
+      interactionsData.value = response.data;
     } catch (e) {
       console.log(e);
     }

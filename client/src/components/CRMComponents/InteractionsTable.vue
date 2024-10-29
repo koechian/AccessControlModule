@@ -34,7 +34,7 @@ const activeFilters = ref({
   leadStatus: false,
   customerEmail: false,
   companyName: false,
-  status: false,
+  type: false,
 });
 
 const emit = defineEmits(['searchQueryUpdated']); // Emit search query
@@ -51,8 +51,8 @@ watchEffect(() => {
   if (activeFilters.value.leadStatus && searchQuery.value) {
     queryParts.push(`leadStatus=${searchQuery.value}`);
   }
-  if (activeFilters.value.status && searchQuery.value) {
-    queryParts.push(`status=${searchQuery.value}`);
+  if (activeFilters.value.type && searchQuery.value) {
+    queryParts.push(`interactionType=${searchQuery.value}`);
   }
   if (activeFilters.value.customerName && searchQuery.value) {
     queryParts.push(`customerName=${searchQuery.value}`);
@@ -65,7 +65,6 @@ watchEffect(() => {
   }
 
   const queryString = queryParts.join('&');
-  console.log(queryString);
   emit('searchQueryUpdated', queryString);
 });
 </script>
@@ -102,12 +101,12 @@ watchEffect(() => {
           toggleActiveFilters('type');
         }
       "
-      v-if="activeFilters['status']"
+      v-if="activeFilters['type']"
       class="p-2 font-normal text-sm bg-blue-500 hover:bg-blue-300"
     >
       <div class="flex place-items-center gap-2 mr-2">
         <PhX />
-        Status
+        InteractionType
       </div>
     </Badge>
 
@@ -172,9 +171,9 @@ watchEffect(() => {
         </DropdownMenuLabel>
         <DropdownMenuLabel
           class="p-2 hover:cursor-pointer hover:bg-blue-500 hover:text-white"
-          @click="toggleActiveFilters('status')"
+          @click="toggleActiveFilters('type')"
         >
-          Status
+          Interaction Type
         </DropdownMenuLabel>
         <DropdownMenuLabel
           class="p-2 hover:cursor-pointer hover:bg-blue-500 hover:text-white"

@@ -12,7 +12,6 @@ import {
   Response,
 } from '@nestjs/common';
 import { CreateInteractionDto } from './DTOs/CreateInteraction.dto';
-import { UpdateInteractionDto } from './DTOs/UpdateInteraction.dto';
 import { InteractionsService } from './interactions.service';
 
 // interaction.controller.ts
@@ -51,5 +50,40 @@ export class InteractionController {
         'Error getting interactions',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+  }
+
+  @Get('getInteractionsCount')
+  async getInteractionsCount() {
+    const result = await this.interactionService.totalInteractions();
+    return result;
+  }
+
+  @Get('queryInteractions')
+  async queryInteractions(
+    @Query('leadStatus') leadStatus: string,
+    @Query('customerName') customerName: string,
+    @Query('customerEmail') customerEmail: string,
+    @Query('companyName') companyName: string,
+    @Query('interactionType') interactionType: string,
+    @Response() res: any,
+  ) {
+    try {
+      const filters = {
+        customerName,
+        leadStatus,
+        customerEmail,
+        companyName,
+        interactionType,
+      };
+
+      const interactions =
+        await this.interactionService.queryInteractions(filters);
+      return res.status(HttpStatus.OK).json(interactions);
+    } catch (error) {
+      console.error('Error fetching interactions:', error);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ message: 'Could not retrieve interactions' });
+    }
   }
 }
