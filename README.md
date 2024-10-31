@@ -39,7 +39,8 @@
 - Data migrations and seeding was done through use of a seeder script and the faker.js Library to provide fake data to flesh out the application.
 - Later on, models for CRM platform were added, the Customers,
 
-### Running the application 
+### Running the application
+
 ⚡
 
 1. Navigate to the root directory and install all deps using `yarn install` or `npm`, your call.
@@ -59,7 +60,7 @@ Admin  =>{
 }
 
 Project Manager => {
-        username: Halie_Tromp
+        username: Grayce29
         password: password
 }
 
